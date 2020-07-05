@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Product Editor</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+</head>
+<#include "navbar.html">
+<#if product.id == 0>
+    <#assign formAction = '/product/add'>
+<#else>
+    <#assign formAction = '/product/edit'>
+</#if>
+    <#if validationWarning??>
+<div class="alert alert-warning" role="alert">
+    <ul>
+    <#list validationWarning as warning>
+    <li>${warning}
+    </#list>
+    </ul>
+</div>
+    </#if>
+<form method="post" action="${formAction}">
+    <INPUT type="hidden" name="id" value="${product.id!'0'}"/>
+    <DIV class="form-group row">
+        <label for="productNameField" class="col-sm-2 col-form-label">Product Name</label>
+        <div class="col-sm-10">
+            <INPUT type="text" id="productNameField" name="name" value="${product.name!''}"/>
+        </div>
+    </DIV>
+    <DIV class="form-group row">
+        <label for="productDescriptionField" class="col-sm-2 col-form-label">Product Description</label>
+        <div class="col-sm-10">
+            <TEXTAREA cols="128" id="productDescriptionField" name="description">${product.description!''}</TEXTAREA>
+        </div>
+    </DIV>
+    <DIV class="form-group row">
+        <label for="productPictureUrlField" class="col-sm-2 col-form-label">Product Picture URL</label>
+        <div class="col-sm-10">
+            <INPUT id="productPictureUrlField" name="pictureUrl" value="${product.pictureUrl!''}"/>
+        </div>
+    </DIV>
+    <DIV class="form-group row">
+        <label for="productPriceField" class="col-sm-2 col-form-label">Product Price</label>
+        <div class="col-sm-10">
+            <INPUT type="text" id="productPriceField" name="price" value="${product.price!0?string.@price}"/>
+        </div>
+    </DIV>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn btn-primary" href="/" role="button">Cancel</a>
+        </div>
+    </div>
+</form>
+</body>
+</html>
