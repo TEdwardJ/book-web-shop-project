@@ -1,1 +1,0 @@
-web: java  $JAVA_OPTS -Done-jar.main.class=edu.ted.webshop.Starter -Dfile.encoding=windows-1251
