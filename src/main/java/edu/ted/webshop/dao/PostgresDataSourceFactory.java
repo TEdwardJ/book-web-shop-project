@@ -23,21 +23,22 @@ public class PostgresDataSourceFactory {
 
     public DataSource getDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        logger.info("Heroku DBUrl: {}", dbUrl);
-        if (dbUrl != null) {
+        String dbUriString = System.getenv("JDBC_DATABASE_URL");
+        logger.info("Heroku DBUrl: {}", dbUriString);
+        if (dbUriString != null) {
             try {
-                URI dbUri = new URI(dbUrl);
-                dataSource.setServerNames(new String[]{dbUri.getHost()});
-                logger.info("Heroku DB Host: {}", dbUri.getHost());
-                dataSource.setDatabaseName(dbUri.getPath().substring(1));
-                logger.info("Heroku DB Name: {}", dbUri.getPath().substring(1));
-                dataSource.setPortNumbers(new int[]{dbUri.getPort()});
-                logger.info("Heroku DB Port: {}", dbUri.getPort());
-                String userInfo = dbUri.getUserInfo();
-                dataSource.setUser(userInfo.substring(0, userInfo.indexOf(":")));
-                logger.info("Heroku DB user: {}", userInfo.indexOf(":"));
-                dataSource.setPassword(userInfo.substring(userInfo.indexOf(":") + 1));
+                URI dbUri = new URI(dbUriString);
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+                logger.info("Heroku dbUrl: {}", dbUrl);
+
+
+                String username = dbUri.getUserInfo().split(":")[0];
+                String password = dbUri.getUserInfo().split(":")[1];
+
+                dataSource.setUser(username);
+                logger.info("Heroku DB user: {}", username);
+                dataSource.setPassword(password);
                 return dataSource;
             } catch (URISyntaxException e) {
                 e.printStackTrace();
