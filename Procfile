@@ -1,1 +1,1 @@
-web: java  $JAVA_OPTS -Dfile.encoding=windows-1251 edu.ted.webshop.Starter
+web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
