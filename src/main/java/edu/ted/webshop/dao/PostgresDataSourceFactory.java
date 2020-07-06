@@ -24,7 +24,7 @@ public class PostgresDataSourceFactory {
     public DataSource getDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String dbUriString = System.getenv("DATABASE_URL");
-        logger.info("Heroku DBUrl: {}", dbUriString);
+        logger.info("Heroku DBUrlString: {}", dbUriString);
         if (dbUriString != null) {
             try {
                 URI dbUri = new URI(dbUriString);
@@ -32,7 +32,7 @@ public class PostgresDataSourceFactory {
 
                 logger.info("Heroku dbUrl: {}", dbUrl);
 
-
+                dataSource.setUrl(dbUrl);
                 String username = dbUri.getUserInfo().split(":")[0];
                 String password = dbUri.getUserInfo().split(":")[1];
 
