@@ -39,16 +39,16 @@ public class PostgresDataSourceFactory {
                 dataSource.setUser(username);
                 logger.info("Heroku DB user: {}", username);
                 dataSource.setPassword(password);
-                return dataSource;
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                logger.error("Configuration of DataSource Failed: {}", e);
             }
-        }
+        } else {
 
-        dataSource.setServerNames(new String[]{dataSourceProperties.getProperty("db.serverName")});
-        dataSource.setPortNumbers(new int[]{Integer.parseInt(dataSourceProperties.getProperty("db.port"))});
-        dataSource.setUser(dataSourceProperties.getProperty("db.user"));
-        dataSource.setPassword(dataSourceProperties.getProperty("db.password"));
+            dataSource.setServerNames(new String[]{dataSourceProperties.getProperty("db.serverName")});
+            dataSource.setPortNumbers(new int[]{Integer.parseInt(dataSourceProperties.getProperty("db.port"))});
+            dataSource.setUser(dataSourceProperties.getProperty("db.user"));
+            dataSource.setPassword(dataSourceProperties.getProperty("db.password"));
+        }
         return dataSource;
     }
 
