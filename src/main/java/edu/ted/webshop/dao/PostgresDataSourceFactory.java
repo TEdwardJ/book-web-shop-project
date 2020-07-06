@@ -23,7 +23,7 @@ public class PostgresDataSourceFactory {
 
     public DataSource getDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        String dbUriString = System.getenv("JDBC_DATABASE_URL");
+        String dbUriString = System.getenv("DATABASE_URL");
         logger.info("Heroku DBUrl: {}", dbUriString);
         if (dbUriString != null) {
             try {
