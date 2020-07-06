@@ -1,4 +1,9 @@
 <configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{requestId} %X{userId} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
     <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>log/WebShopProject.log</file>
         <append>true</append>
@@ -14,6 +19,7 @@
 
     <root level="debug">
         <appender-ref ref="rollingFile" />
+        <appender-ref ref="STDOUT" />
     </root>
 
 
