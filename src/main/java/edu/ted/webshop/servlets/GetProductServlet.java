@@ -2,6 +2,7 @@ package edu.ted.webshop.servlets;
 
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
+import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

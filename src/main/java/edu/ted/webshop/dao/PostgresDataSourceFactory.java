@@ -19,6 +19,21 @@ public class PostgresDataSourceFactory {
 
     public DataSource getDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        if (dbUrl !=null){
+            try {
+                URI dbUri = new URI(dbUrl);
+                dataSource.setServerNames(new String[]{dbUri.getHost()});
+                dataSource.setDatabaseName(dbUri.getPath().substring(1));
+                dataSource.setPortNumbers(new int[]{dbUri.getPort()});
+                String userInfo = dbUri.getUserInfo();
+                dataSource.setUser(userInfo.substring(0,userInfo.indexOf(":")));
+                dataSource.setPassword(userInfo.substring(userInfo.indexOf(":")+1));
+                return dataSource;
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
 
         dataSource.setServerNames(new String[]{dataSourceProperties.getProperty("db.serverName")});
         dataSource.setPortNumbers(new int[]{Integer.parseInt(dataSourceProperties.getProperty("db.port"))});

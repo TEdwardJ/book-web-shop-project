@@ -2,7 +2,7 @@ package edu.ted.webshop.dao;
 
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
-import edu.ted.webshop.servlets.TemplateEngine;
+import edu.ted.webshop.utils.TemplateEngine;
 import edu.ted.webshop.utils.PropertyReader;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;

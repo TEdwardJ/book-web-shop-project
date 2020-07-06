@@ -2,6 +2,7 @@ package edu.ted.webshop.servlets;
 
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
+import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @WebServlet(name = "AllProductsServlet", urlPatterns = {"/product/all"})
 public class AllProductsServlet extends HttpServlet {
