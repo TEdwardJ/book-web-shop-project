@@ -24,6 +24,25 @@ public class ProductFormHandlerServlet extends HttpServlet {
     public ProductFormHandlerServlet() throws IOException {
     }
 
+
+    private boolean isEmptyOrNull(String field) {
+        return field == null || field.isEmpty();
+    }
+
+    private List<String> validateProduct(HttpServletRequest req) {
+
+        Product productToValidate = getProductFromRequest(req);
+        List<String> validationErrorList = new ArrayList<>();
+
+        if (isEmptyOrNull(productToValidate.getName())) {
+            validationErrorList.add("Product Name cannot be empty;");
+        }
+        if (productToValidate.getPrice().intValue() == 0) {
+            validationErrorList.add("Product Price should be set to the value greater than 0;");
+        }
+        return validationErrorList;
+    }
+
     private int getParameterFromUrl(HttpServletRequest req) {
         String servletPath = req.getServletPath();
         String requestURI = req.getRequestURI();
@@ -52,11 +71,16 @@ public class ProductFormHandlerServlet extends HttpServlet {
         String pictureUrl = req.getParameter("pictureUrl");
         String price = Optional.ofNullable(req.getParameter("price")).orElse("0");
         BigDecimal productPrice = new BigDecimal(price.replace(",", "."));
-        return new Product(Integer.valueOf(productId), productName, productDescription, pictureUrl, productPrice);
+        return new Product(Integer.parseInt(productId), productName, productDescription, pictureUrl, productPrice);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<String> validationWarningList = validateProduct(req);
+        if (validationWarningList.isEmpty()) {
+        } else {
+            req.setAttribute("validationWarning", validationWarningList);
+        }
         Product newProduct = getProductFromRequest(req);
 
         Map map = new HashMap();
