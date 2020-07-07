@@ -17,7 +17,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public class JdbcProductDao {
+public final class JdbcProductDao {
+    private final static JdbcProductDao instance = new JdbcProductDao();
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -25,13 +26,23 @@ public class JdbcProductDao {
 
     private final TemplateEngine templateEngine = TemplateEngine.getInstance();
 
-    DataSource dataSource;
+    private DataSource dataSource;
     private Properties queries;
 
-    public JdbcProductDao() throws IOException {
-        defaultDataSourceFactory = new PostgresDataSourceFactory("db.properties");
-        dataSource = defaultDataSourceFactory.getDataSource();
-        queries = PropertyReader.readPropertyFile("query.properties");
+    private JdbcProductDao() {
+        try {
+            defaultDataSourceFactory = new PostgresDataSourceFactory("db.properties");
+            dataSource = defaultDataSourceFactory.getDataSource();
+            queries = PropertyReader.readPropertyFile("query.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("Error while JdbcProductDao was ccreating{}",e);
+        }
+
+    }
+
+    public static JdbcProductDao getInstance(){
+        return instance;
     }
 
     public List<Product> getAll() {

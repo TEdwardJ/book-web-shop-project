@@ -17,7 +17,7 @@ import java.util.Map;
 @WebServlet(name = "AllProductsServlet", urlPatterns = {"/product/all"})
 public class AllProductsServlet extends HttpServlet {
 
-    JdbcProductDao productDao = new JdbcProductDao();
+    private JdbcProductDao productDao = JdbcProductDao.getInstance();
     private TemplateEngine templateEngine = TemplateEngine.getInstance();
 
     public AllProductsServlet() throws IOException {

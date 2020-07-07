@@ -18,12 +18,8 @@ import java.util.regex.Pattern;
 @WebServlet(name = "GetProductServlet", urlPatterns = "/product/*")
 public class GetProductServlet extends HttpServlet {
 
-
-    private JdbcProductDao productDao = new JdbcProductDao();
+    private final JdbcProductDao productDao = JdbcProductDao.getInstance();
     private final TemplateEngine templateEngine = TemplateEngine.getInstance();
-
-    public GetProductServlet() throws IOException  {
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

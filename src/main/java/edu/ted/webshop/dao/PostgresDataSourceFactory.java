@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
 public class PostgresDataSourceFactory {
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Properties dataSourceProperties;
@@ -43,7 +43,6 @@ public class PostgresDataSourceFactory {
                 logger.error("Configuration of DataSource Failed: {}", e);
             }
         } else {
-
             dataSource.setServerNames(new String[]{dataSourceProperties.getProperty("db.serverName")});
             dataSource.setPortNumbers(new int[]{Integer.parseInt(dataSourceProperties.getProperty("db.port"))});
             dataSource.setUser(dataSourceProperties.getProperty("db.user"));

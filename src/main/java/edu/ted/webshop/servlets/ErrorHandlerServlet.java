@@ -16,12 +16,8 @@ import java.util.*;
 @WebServlet("/errorHandler")
 public class ErrorHandlerServlet extends HttpServlet {
 
-
-    JdbcProductDao productDao = new JdbcProductDao();
     private TemplateEngine templateEngine = TemplateEngine.getInstance();
 
-    public ErrorHandlerServlet() throws IOException {
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -14,11 +14,7 @@ import java.util.*;
 @WebServlet(name = "SearchProductServlet", urlPatterns = "/search")
 public class SearchServlet extends HttpServlet {
 
-
-    public SearchServlet() throws IOException {
-    }
-
-    JdbcProductDao productDao = new JdbcProductDao();
+    private final JdbcProductDao productDao = JdbcProductDao.getInstance();
     private TemplateEngine templateEngine = TemplateEngine.getInstance();
 
     @Override

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 @WebServlet(name = "editProductServlet", urlPatterns = {"/product/edit/*", "/product/add"})
 public class ProductFormHandlerServlet extends HttpServlet {
 
-    private final JdbcProductDao productDao = new JdbcProductDao();
+    private final JdbcProductDao productDao = JdbcProductDao.getInstance();
     private final TemplateEngine templateEngine = TemplateEngine.getInstance();
 
     public ProductFormHandlerServlet() throws IOException {
@@ -29,9 +29,8 @@ public class ProductFormHandlerServlet extends HttpServlet {
         return field == null || field.isEmpty();
     }
 
-    private List<String> validateProduct(HttpServletRequest req) {
+    private List<String> validateProduct(Product productToValidate) {
 
-        Product productToValidate = getProductFromRequest(req);
         List<String> validationErrorList = new ArrayList<>();
 
         if (isEmptyOrNull(productToValidate.getName())) {
@@ -55,14 +54,6 @@ public class ProductFormHandlerServlet extends HttpServlet {
     }
 
     private Product getProductFromRequest(HttpServletRequest req) {
-        if (req.getMethod().equals("GET")) {
-            int productId = getParameterFromUrl(req);
-            if (productId != 0) {
-                return productDao.getOneById(getParameterFromUrl(req));
-            } else {
-                return new Product();
-            }
-        }
 
         String productId = req.getParameter("id");
 
@@ -76,12 +67,12 @@ public class ProductFormHandlerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<String> validationWarningList = validateProduct(req);
+        Product newProduct = getProductFromRequest(req);
+        List<String> validationWarningList = validateProduct(newProduct);
         if (validationWarningList.isEmpty()) {
         } else {
             req.setAttribute("validationWarning", validationWarningList);
         }
-        Product newProduct = getProductFromRequest(req);
 
         Map map = new HashMap();
         map.put("product", newProduct);
@@ -107,8 +98,9 @@ public class ProductFormHandlerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
+        int productId = getParameterFromUrl(req);
 
-        Product newProduct = getProductFromRequest(req);
+        Product newProduct = productDao.getOneById(productId);
 
         Map map = new HashMap();
         map.put("product", newProduct);
