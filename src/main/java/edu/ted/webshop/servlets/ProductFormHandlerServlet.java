@@ -99,11 +99,18 @@ public class ProductFormHandlerServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         int productId = getParameterFromUrl(req);
-
-        Product newProduct = productDao.getOneById(productId);
-
-        Map map = new HashMap();
-        map.put("product", newProduct);
-        templateEngine.writePage("productForm.html", resp.getWriter(), map);
+        Product newProduct;
+        if (productId > 0) {
+            newProduct = productDao.getOneById(productId);
+        } else {
+            newProduct = new Product();
+        }
+        if (newProduct == null) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            Map map = new HashMap();
+            map.put("product", newProduct);
+            templateEngine.writePage("productForm.html", resp.getWriter(), map);
+        }
     }
 }
