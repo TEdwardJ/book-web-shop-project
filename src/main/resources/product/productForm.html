@@ -50,7 +50,7 @@
     <DIV class="form-group row">
         <label for="productPriceField" class="col-sm-2 col-form-label">Product Price</label>
         <div class="col-sm-10">
-            <INPUT type="text" id="productPriceField" name="price" value="${product.price!0?string.@price}"/>
+            <INPUT type="text" id="productPriceField" name="price" value="${product.price?string.@price}"/>
         </div>
     </DIV>
     <div class="form-group row">

@@ -36,7 +36,7 @@ public final class TemplateEngine {
         webConfiguration.setFallbackOnNullLoopVariable(false);
         Map<String, TemplateNumberFormatFactory> customNumberFormats
                 = new HashMap<String, TemplateNumberFormatFactory>();
-        customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("0.##"));
+        customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("0.00"));
         webConfiguration.setCustomNumberFormats(customNumberFormats);
 
         //

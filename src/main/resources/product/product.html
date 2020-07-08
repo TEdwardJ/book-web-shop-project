@@ -14,12 +14,37 @@
 </head>
 <body>
 <#include "navbar.html">
-<table class="table">
-    <TR><TH>Id<TD>${product.id}</TD></TR>
-    <TR><TH>Name<TD>${product.name}w</TD></TR>
-    <TR><TH>Description<TD>${product.description}</TD></TR>
-    <TR><TH>Price<TD>${product.price?string.@price}</TD></TR>
-</table>
+<TABLE>
+    <TR>
+        <TD rowspan = "3">
+            <div class="card">
+                <img src="${product.pictureUrl}" qclass="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <p class="card-text">${product.name}</p>
+                </div>
+            </div>
+        <TD>
+            <table class="table">
+                <TR>
+                    <TH>Id
+                    <TD>${product.id}</TD>
+                </TR>
+                <TR>
+                    <TH>Name
+                    <TD>${product.name}</TD>
+                </TR>
+                <TR>
+                    <TH>Description
+                    <TD>${product.description}</TD>
+                </TR>
+                <TR>
+                    <TH>Price
+                    <TD>${product.price?string.@price}</TD>
+                </TR>
+            </table>
+        </TD>
+    </TR>
+</TABLE>
 <div class="form-group row">
     <div class="col-sm-10">
         <a class="btn btn-primary" href="/" role="button">Cancel</a>

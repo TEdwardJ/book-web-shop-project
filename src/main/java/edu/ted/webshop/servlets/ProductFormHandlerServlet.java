@@ -21,9 +21,6 @@ public class ProductFormHandlerServlet extends HttpServlet {
     private final JdbcProductDao productDao = JdbcProductDao.getInstance();
     private final TemplateEngine templateEngine = TemplateEngine.getInstance();
 
-    public ProductFormHandlerServlet() throws IOException {
-    }
-
 
     private boolean isEmptyOrNull(String field) {
         return field == null || field.isEmpty();

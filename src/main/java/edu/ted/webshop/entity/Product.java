@@ -9,7 +9,7 @@ public class Product {
     private String name;
     private String description;
     private String pictureUrl;
-    private BigDecimal price;
+    private BigDecimal price = new BigDecimal(0);
     private Map<String, String> properties = new LinkedHashMap<>();
 
     public Product() {
@@ -60,5 +60,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }
