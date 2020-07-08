@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.webapp.*;
 
 
@@ -19,23 +20,26 @@ public class WebShopServer {
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(8081);
         server.setConnectors(new Connector[]{connector});
-        WebAppContext context = new WebAppContext();
-        context.setConfigurations(new Configuration[] {
+        //WebAppContext webContext = new WebAppContext("target/web-shop-project-1.0-SNAPSHOT.war", "/");
+        WebAppContext webContext = new WebAppContext("src/main/webapp", "/");
+        webContext.setConfigurations(new Configuration[] {
                 new AnnotationConfiguration(), new WebXmlConfiguration(),
                 new WebInfConfiguration(),
                 new PlusConfiguration(), new MetaInfConfiguration(),
                 new FragmentConfiguration(), new EnvConfiguration() });
-        context.setDescriptor("src/main/webapp/WEB-INF/web.xml");
-        context.setContextPath("/");
-        context.setWar("target/web-shop-project-1.0-SNAPSHOT.war");
+        webContext.setDescriptor("src/main/webapp/WEB-INF/web.xml");
+        //context.setContextPath("/");
+        //context.setWar("target/web-shop-project-1.0-SNAPSHOT.war");
+        //context.setWar("target/web-shop-project-1.0-SNAPSHOT.one-jar.jar");
         ///context.getMetaData().addContainerResource(new PathResource(new File("./target/classes").toURI()));
         //context.getMetaData().setWebInfClassesDirs();
-        context.setClassLoader(Thread.currentThread().getContextClassLoader());
-        context.setAttribute(AnnotationConfiguration.MULTI_THREADED, Boolean.FALSE);
-        context.setAttribute(AnnotationConfiguration.MAX_SCAN_WAIT, 20);
-
+        webContext.setClassLoader(Thread.currentThread().getContextClassLoader());
+        webContext.setAttribute(AnnotationConfiguration.MULTI_THREADED, Boolean.FALSE);
+        webContext.setAttribute(AnnotationConfiguration.MAX_SCAN_WAIT, 20);
+        //ServletContextHandler servletHandler = new ServletContextHandler();
+        //webContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern", ".*/classes/.*");
         ContextHandlerCollection contexts = new ContextHandlerCollection(
-                context
+                webContext
         );
         server.setHandler(contexts);
         server.start();

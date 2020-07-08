@@ -1,7 +1,9 @@
 package edu.ted.webshop.servlets;
 
+import edu.ted.webshop.controller.ProductController;
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
+import edu.ted.webshop.entity.ProductDTO;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletException;
@@ -21,23 +23,33 @@ public class ProductFormHandlerServlet extends HttpServlet {
     private final JdbcProductDao productDao = JdbcProductDao.getInstance();
     private final TemplateEngine templateEngine = TemplateEngine.getInstance();
 
+    private final ProductController productController = new ProductController();
+
 
     private boolean isEmptyOrNull(String field) {
         return field == null || field.isEmpty();
     }
 
-    private List<String> validateProduct(Product productToValidate) {
+/*    private List<String> validateProduct(ProductDTO productToValidate) {
 
         List<String> validationErrorList = new ArrayList<>();
 
         if (isEmptyOrNull(productToValidate.getName())) {
             validationErrorList.add("Product Name cannot be empty;");
         }
-        if (productToValidate.getPrice().intValue() == 0) {
+        try{
+            BigDecimal priceToValidate = new BigDecimal(productToValidate.getPrice());
+        } catch (Exception e) {
+            validationErrorList.add("Product price should not contains any characters except digits and delimiters");
+        }
+        if (new BigDecimal(productToValidate.getPrice()).compareTo(new BigDecimal(0))>=0) {
             validationErrorList.add("Product Price should be set to the value greater than 0;");
         }
+        if (productToValidate.getPrice().isEmpty() ) {
+            validationErrorList.add("Product Price should be specified;");
+        }
         return validationErrorList;
-    }
+    }*/
 
     private int getParameterFromUrl(HttpServletRequest req) {
         String servletPath = req.getServletPath();
@@ -50,7 +62,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
         return 0;
     }
 
-    private Product getProductFromRequest(HttpServletRequest req) {
+    private ProductDTO getProductFromRequest(HttpServletRequest req) {
 
         String productId = req.getParameter("id");
 
@@ -58,14 +70,13 @@ public class ProductFormHandlerServlet extends HttpServlet {
         String productDescription = req.getParameter("description");
         String pictureUrl = req.getParameter("pictureUrl");
         String price = Optional.ofNullable(req.getParameter("price")).orElse("0");
-        BigDecimal productPrice = new BigDecimal(price.replace(",", "."));
-        return new Product(Integer.parseInt(productId), productName, productDescription, pictureUrl, productPrice);
+        return new ProductDTO(productId, productName, productDescription, pictureUrl, price);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Product newProduct = getProductFromRequest(req);
-        List<String> validationWarningList = validateProduct(newProduct);
+        ProductDTO newProduct = getProductFromRequest(req);
+        List<String> validationWarningList = productController.validateProduct(newProduct);
         if (validationWarningList.isEmpty()) {
         } else {
             req.setAttribute("validationWarning", validationWarningList);
@@ -74,14 +85,13 @@ public class ProductFormHandlerServlet extends HttpServlet {
         Map map = new HashMap();
         map.put("product", newProduct);
         List<String> validationWarning = new ArrayList<>();
-        if (req.getAttribute("validationWarning") != null) {
-            validationWarning.addAll((List<String>) req.getAttribute("validationWarning"));
-        }
-        if (validationWarning.size() == 0) {
-            if (newProduct.getId() != 0) {
-                map.put("product", productDao.updateOne(newProduct));
+
+        Product product = newProduct.getProduct();
+        if (validationWarningList.size() == 0) {
+            if (product.getId() != 0) {
+                map.put("product", productDao.updateOne(product));
             } else {
-                map.put("product", productDao.insertOne(newProduct));
+                map.put("product", productDao.insertOne(product));
             }
         } else {
             map.put("validationWarning", validationWarning);

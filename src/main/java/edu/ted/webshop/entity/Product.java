@@ -15,6 +15,7 @@ public class Product {
     public Product() {
     }
 
+
     public Product(String name, String description, String pictureUrl, BigDecimal price) {
         this.name = name;
         this.description = description;

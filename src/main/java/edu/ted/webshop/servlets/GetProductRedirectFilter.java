@@ -28,7 +28,6 @@ public class GetProductRedirectFilter implements Filter {
             } else if (requestURI.startsWith("product/edit/")) {
                 request.getRequestDispatcher("/product/edit").forward(request, response);
             }else if (!requestURI.matches("/product/[0-9]+")){
-                //request.getRequestDispatcher("/notFound.html").forward(request, response);
                 ((HttpServletResponse)response).sendRedirect("/notFound.html");
             }
             chain.doFilter(request, response);
