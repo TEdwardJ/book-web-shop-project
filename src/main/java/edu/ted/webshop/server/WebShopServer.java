@@ -7,8 +7,9 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.webapp.*;
+
+import java.util.Optional;
 
 
 public class WebShopServer {
@@ -16,9 +17,13 @@ public class WebShopServer {
     private Server server;
 
     public void start() throws Exception {
+
+        System.out.println(System.getenv("PORT")+" is the port");
+
+        Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
         server = new Server();
         ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8081);
+        connector.setPort(port);
         server.setConnectors(new Connector[]{connector});
         //WebAppContext webContext = new WebAppContext("target/web-shop-project-1.0-SNAPSHOT.war", "/");
         WebAppContext webContext = new WebAppContext("src/main/webapp", "/");
