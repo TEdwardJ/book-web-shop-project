@@ -29,7 +29,7 @@ public class ProductController {
         } catch (Exception e) {
             validationErrorList.add("Product price should not contains any characters except digits and delimiters");
         }
-        if (new BigDecimal(productToValidate.getPrice()).compareTo(new BigDecimal(0))>=0) {
+        if (new BigDecimal(productToValidate.getPrice()).compareTo(new BigDecimal(0))<=0) {
             validationErrorList.add("Product Price should be set to the value greater than 0;");
         }
         if (productToValidate.getPrice().isEmpty() ) {

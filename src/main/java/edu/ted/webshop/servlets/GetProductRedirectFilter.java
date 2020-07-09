@@ -22,15 +22,18 @@ public class GetProductRedirectFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             final String requestURI = ((HttpServletRequest) request).getRequestURI();
-
-            if (requestURI.startsWith("product/add")) {
-                request.getRequestDispatcher("/product/add").forward(request, response);
-            } else if (requestURI.startsWith("product/edit/")) {
-                request.getRequestDispatcher("/product/edit").forward(request, response);
-            }else if (!requestURI.matches("/product/[0-9]+")){
-                ((HttpServletResponse)response).sendRedirect("/notFound.html");
+            if ("/".equals(requestURI)) {
+                request.getRequestDispatcher("/product/all").forward(request, response);
+            } else if (requestURI.startsWith("/product")) {
+                if (requestURI.startsWith("/product/add")) {
+                    request.getRequestDispatcher("/product/add").forward(request, response);
+                } else if (requestURI.startsWith("/product/edit/")) {
+                    request.getRequestDispatcher(requestURI).forward(request, response);
+                } else if (!requestURI.matches("/product/[0-9]+")) {
+                    ((HttpServletResponse) response).sendRedirect("/notFound.html");
+                }
             }
-            chain.doFilter(request, response);
+        chain.doFilter(request, response);
         }
     }
 

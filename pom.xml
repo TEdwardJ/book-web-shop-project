@@ -7,7 +7,7 @@
     <groupId>edu.ted</groupId>
     <artifactId>web-shop-project</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+<!--    <packaging>war</packaging>-->
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -116,6 +116,18 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.jolira</groupId>
+                <artifactId>onejar-maven-plugin</artifactId>
+                <version>1.4.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>one-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

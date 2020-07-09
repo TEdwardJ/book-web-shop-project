@@ -30,27 +30,6 @@ public class ProductFormHandlerServlet extends HttpServlet {
         return field == null || field.isEmpty();
     }
 
-/*    private List<String> validateProduct(ProductDTO productToValidate) {
-
-        List<String> validationErrorList = new ArrayList<>();
-
-        if (isEmptyOrNull(productToValidate.getName())) {
-            validationErrorList.add("Product Name cannot be empty;");
-        }
-        try{
-            BigDecimal priceToValidate = new BigDecimal(productToValidate.getPrice());
-        } catch (Exception e) {
-            validationErrorList.add("Product price should not contains any characters except digits and delimiters");
-        }
-        if (new BigDecimal(productToValidate.getPrice()).compareTo(new BigDecimal(0))>=0) {
-            validationErrorList.add("Product Price should be set to the value greater than 0;");
-        }
-        if (productToValidate.getPrice().isEmpty() ) {
-            validationErrorList.add("Product Price should be specified;");
-        }
-        return validationErrorList;
-    }*/
-
     private int getParameterFromUrl(HttpServletRequest req) {
         String servletPath = req.getServletPath();
         String requestURI = req.getRequestURI();

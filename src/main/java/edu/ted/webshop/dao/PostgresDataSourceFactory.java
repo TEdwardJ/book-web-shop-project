@@ -19,6 +19,7 @@ public class PostgresDataSourceFactory {
 
     public PostgresDataSourceFactory(String propertiesFile) throws IOException {
         dataSourceProperties = PropertyReader.readPropertyFile(propertiesFile);
+        logger.info("dsProperties {}", dataSourceProperties);
     }
 
     public DataSource getDataSource() {

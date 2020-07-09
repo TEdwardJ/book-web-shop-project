@@ -20,9 +20,6 @@ public class AllProductsServlet extends HttpServlet {
     private JdbcProductDao productDao = JdbcProductDao.getInstance();
     private TemplateEngine templateEngine = TemplateEngine.getInstance();
 
-    public AllProductsServlet() throws IOException {
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
