@@ -12,6 +12,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+import java.util.Optional;
 
 public class WebShopServerClassic {
 
@@ -19,7 +20,11 @@ public class WebShopServerClassic {
     private Server server;
 
     public void start() throws Exception {
-        server = new Server(8081);
+        System.out.println(System.getenv("PORT")+" is the port");
+
+        Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
+
+        server = new Server(port);
 /*        ServerConnector connector = new ServerConnector(server);
         connector.setPort(8081);
         server.setConnectors(new Connector[]{connector});*/
