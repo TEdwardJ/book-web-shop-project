@@ -4,13 +4,19 @@ import edu.ted.webshop.servlets.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.resource.PathResource;
 
 
 import javax.servlet.DispatcherType;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -24,26 +30,32 @@ public class WebShopServerClassic {
 
         Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
 
-        server = new Server(port);
-/*        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8081);
-        server.setConnectors(new Connector[]{connector});*/
+        server = new Server();
+        ServerConnector connector = new ServerConnector(server);
+        connector.setPort(port);
+        server.setConnectors(new Connector[]{connector});
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        //handler.setContextPath("/");
+        context.setContextPath("/");
+
+        ContextHandler ctxHandler = new ContextHandler();
+        ctxHandler.setContextPath("/");
+        ResourceHandler resource = new ResourceHandler();
+        resource.setBaseResource(new PathResource(new File("src/main/webapp")));
+        ctxHandler.setHandler(resource);
         context.addServlet(new ServletHolder(new AllProductsServlet()), "/product/all");
         context.addServlet(new ServletHolder(new GetProductServlet()), "/product/*");
         context.addServlet(new ServletHolder(new ProductFormHandlerServlet()), "/product/edit/*");
         context.addServlet(new ServletHolder(new ProductFormHandlerServlet()), "/product/add");
         context.addServlet(new ServletHolder(new ErrorHandlerServlet()), "/errorHandler");
         context.addServlet(new ServletHolder(new SearchServlet()), "/search");
-        //FilterHolder allProductsFilter = new FilterHolder(new GetProductRedirectFilter());
-        //context.addFilter(allProductsFilter,"/product/*", EnumSet.of(DispatcherType.REQUEST));
-        context.addFilter(new FilterHolder(new GetProductRedirectFilter()), "/*", EnumSet.of(DispatcherType.REQUEST));
 
-        server.setHandler(context);
+        context.addFilter(new FilterHolder(new GetProductRedirectFilter()), "/*", EnumSet.of(DispatcherType.REQUEST));
+        ContextHandlerCollection contexts = new ContextHandlerCollection(
+                context,ctxHandler
+        );
+        server.setHandler(contexts);
         server.start();
-        //server.dump(System.err);
-        //server.join();
+
     }
 }
