@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 
-public class WebShopServerNew {
+public class WebShopServerAnnotations {
 
     private Server server;
 
@@ -39,7 +39,7 @@ public class WebShopServerNew {
                         new AnnotationConfiguration() {
                             @Override
                             protected void scanForAnnotations(WebAppContext context) throws Exception {
-                                Resource classPathResource = Resource.newResource(WebShopServerNew.class.getResource("../../../target/classes").toURI());
+                                Resource classPathResource = Resource.newResource(WebShopServerAnnotations.class.getResource("../../../target/classes").toURI());
                                 context.getMetaData().addContainerResource(classPathResource);
                                 super.scanForAnnotations(context);
                             }
