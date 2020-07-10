@@ -15,7 +15,6 @@ import org.eclipse.jetty.util.resource.PathResource;
 
 import javax.servlet.DispatcherType;
 import java.io.File;
-import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -39,7 +38,7 @@ public class WebShopServer {
         ContextHandler ctxHandler = new ContextHandler();
         ctxHandler.setContextPath("/");
         ResourceHandler resource = new ResourceHandler();
-        resource.setBaseResource(new PathResource(new File("webapp")));
+        //resource.setBaseResource(new PathResource(new File("webapp")));
         ctxHandler.setHandler(resource);
         context.addServlet(new ServletHolder(new AllProductsServlet()), "/product/all");
         context.addServlet(new ServletHolder(new GetProductServlet()), "/product/*");
