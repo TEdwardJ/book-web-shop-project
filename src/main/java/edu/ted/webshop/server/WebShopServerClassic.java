@@ -41,7 +41,7 @@ public class WebShopServerClassic {
         ContextHandler ctxHandler = new ContextHandler();
         ctxHandler.setContextPath("/");
         ResourceHandler resource = new ResourceHandler();
-        resource.setBaseResource(new PathResource(new File("src/main/webapp")));
+        resource.setBaseResource(new PathResource(new File("webapp")));
         ctxHandler.setHandler(resource);
         context.addServlet(new ServletHolder(new AllProductsServlet()), "/product/all");
         context.addServlet(new ServletHolder(new GetProductServlet()), "/product/*");
