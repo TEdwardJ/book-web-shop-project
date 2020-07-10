@@ -25,6 +25,10 @@ public class GetProductRedirectFilter implements Filter {
             if ("/".equals(requestURI)) {
                 request.getRequestDispatcher("/product/all").forward(request, response);
             } else if (requestURI.startsWith("/product")) {
+                if (requestURI.startsWith("/product/all")) {
+                    chain.doFilter(request, response);
+                    return;
+                } else
                 if (requestURI.startsWith("/product/add")) {
                     request.getRequestDispatcher("/product/add").forward(request, response);
                 } else if (requestURI.startsWith("/product/edit/")) {
