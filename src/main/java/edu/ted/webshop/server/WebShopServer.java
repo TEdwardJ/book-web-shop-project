@@ -4,17 +4,10 @@ import edu.ted.webshop.servlets.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.PathResource;
+import org.eclipse.jetty.servlet.*;
 
 
 import javax.servlet.DispatcherType;
-import java.io.File;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -32,26 +25,41 @@ public class WebShopServer {
         connector.setPort(port);
         server.setConnectors(new Connector[]{connector});
 
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+        ServletContextHandler mainContextHandler = new ServletContextHandler();
 
-        ContextHandler ctxHandler = new ContextHandler();
-        ctxHandler.setContextPath("/");
-        ResourceHandler resource = new ResourceHandler();
-        ctxHandler.setResourceBase("target/classes/static");
-        ctxHandler.setHandler(resource);
-        context.addServlet(new ServletHolder(new AllProductsServlet()), "/product/all");
-        context.addServlet(new ServletHolder(new GetProductServlet()), "/product/*");
-        context.addServlet(new ServletHolder(new ProductFormHandlerServlet()), "/product/edit/*");
-        context.addServlet(new ServletHolder(new ProductFormHandlerServlet()), "/product/add");
-        context.addServlet(new ServletHolder(new ErrorHandlerServlet()), "/errorHandler");
-        context.addServlet(new ServletHolder(new SearchServlet()), "/search");
-        context.addFilter(new FilterHolder(new GetProductRedirectFilter()), "/*", EnumSet.of(DispatcherType.REQUEST));
-        ContextHandlerCollection contexts = new ContextHandlerCollection(
-                ctxHandler, context
-                );
-        server.setHandler(contexts);
+        mainContextHandler.setContextPath("/");
+        mainContextHandler.setResourceBase("target/classes/static");
+
+        initServlets(mainContextHandler);
+        initFilters(mainContextHandler);
+
+        ErrorPageErrorHandler handler404error = initErrorHandler();
+
+        mainContextHandler.setErrorHandler(handler404error);
+        server.setHandler(mainContextHandler);
         server.start();
 
+    }
+
+    private void initFilters(ServletContextHandler mainContextHandler) {
+        mainContextHandler.addFilter(GetProductRedirectFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+    }
+
+    private void initServlets(ServletContextHandler mainContextHandler) {
+        mainContextHandler.addServlet(new ServletHolder(new AllProductsServlet()), "");
+        mainContextHandler.addServlet(AllProductsServlet.class, "/product/all");
+        mainContextHandler.addServlet(GetProductServlet.class, "/product/*");
+        mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/edit/*");
+        mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/add");
+        mainContextHandler.addServlet(ErrorHandlerServlet.class, "/errorHandler");
+        mainContextHandler.addServlet(SearchServlet.class, "/search");
+        mainContextHandler.addServlet(DefaultServlet.class, "/");
+    }
+
+    private ErrorPageErrorHandler initErrorHandler() {
+        ErrorPageErrorHandler handler404error = new ErrorPageErrorHandler();
+        handler404error.addErrorPage(404,"/notFound.html");
+        handler404error.addErrorPage(Exception.class,"/errorHandler");
+        return handler404error;
     }
 }
