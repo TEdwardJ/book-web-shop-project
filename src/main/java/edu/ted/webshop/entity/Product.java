@@ -70,4 +70,15 @@ public class Product {
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
