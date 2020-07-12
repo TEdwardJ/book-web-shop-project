@@ -1,7 +1,6 @@
 package edu.ted.webshop.servlets;
 
 import edu.ted.webshop.controller.ProductController;
-import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletConfig;
@@ -19,7 +18,7 @@ public class AllProductsServlet extends HttpServlet {
 
     private  ProductController productController;
 
-    private TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private TemplateEngine templateEngine;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,6 +34,6 @@ public class AllProductsServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productController = (ProductController) this.getServletContext().getAttribute("productController");
-
+        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

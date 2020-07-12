@@ -4,6 +4,7 @@ import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +17,7 @@ import java.util.*;
 @WebServlet("/errorHandler")
 public class ErrorHandlerServlet extends HttpServlet {
 
-    private TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private TemplateEngine templateEngine;
 
 
     @Override
@@ -32,5 +33,11 @@ public class ErrorHandlerServlet extends HttpServlet {
                 );
         map.put("errorDescription", errorWriter.toString());
         templateEngine.writePage("errorHandler.html", resp.getWriter(), map);
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

@@ -16,19 +16,19 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class TemplateEngine {
+public class TemplateEngine {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String BASE_TEMPLATE_PATH = "/product/";
 
-    private static final TemplateEngine ENGINE_INSTANCE = new TemplateEngine();
     private final Configuration webConfiguration;
     private final Configuration dbConfiguration;
 
-    private TemplateEngine() {
+    public TemplateEngine() {
         webConfiguration = new Configuration(Configuration.VERSION_2_3_30);
         webConfiguration.setClassForTemplateLoading(WebShopServer.class, BASE_TEMPLATE_PATH);
-        // Recommended settings for new projects:
+
+
         webConfiguration.setDefaultEncoding("UTF-8");
         webConfiguration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         webConfiguration.setLogTemplateExceptions(false);
@@ -42,7 +42,8 @@ public final class TemplateEngine {
         //
         dbConfiguration = new Configuration(Configuration.VERSION_2_3_30);
         dbConfiguration.setClassForTemplateLoading(WebShopServer.class, BASE_TEMPLATE_PATH);
-        // Recommended settings for new projects:
+
+
         dbConfiguration.setDefaultEncoding("UTF-8");
         dbConfiguration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         dbConfiguration.setLogTemplateExceptions(false);
@@ -54,10 +55,6 @@ public final class TemplateEngine {
         dbConfiguration.setCustomNumberFormats(dbCustomNumberFormats);
     }
 
-    public static TemplateEngine getInstance() {
-        return ENGINE_INSTANCE;
-    }
-
     public void writePage(String page, Writer writer, Map fieldsMap) {
         try {
             Template template = webConfiguration.getTemplate(page);
@@ -65,11 +62,9 @@ public final class TemplateEngine {
         } catch (TemplateException e) {
             logger.error("Template Engine Error occured: {}", e);
             logger.error("Template page: {}", page);
-            //throw e;
         } catch (IOException e) {
             logger.error("Template Engine Error occured: {}", e);
             logger.error("Template page: {}", page);
-            //throw e;
         }
 
     }

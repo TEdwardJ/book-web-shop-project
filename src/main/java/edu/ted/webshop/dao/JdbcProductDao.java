@@ -23,12 +23,13 @@ public class JdbcProductDao {
 
     private PostgresDataSourceFactory defaultDataSourceFactory;
 
-    private final TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private final TemplateEngine templateEngine;
 
     private DataSource dataSource;
     private Properties queries;
 
-    public JdbcProductDao() {
+    public JdbcProductDao(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
         try {
             defaultDataSourceFactory = new PostgresDataSourceFactory("db.properties");
             dataSource = defaultDataSourceFactory.getDataSource();

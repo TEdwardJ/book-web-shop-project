@@ -18,7 +18,7 @@ public class GetProductServlet extends HttpServlet {
 
     private ProductController productController;
 
-    private final TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private TemplateEngine templateEngine;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,5 +33,6 @@ public class GetProductServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productController = (ProductController) this.getServletContext().getAttribute("productController");
+        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

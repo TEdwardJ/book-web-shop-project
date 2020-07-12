@@ -16,7 +16,7 @@ import java.util.*;
 @WebServlet(name = "editProductServlet", urlPatterns = {"/product/edit/*", "/product/add"})
 public class ProductFormHandlerServlet extends HttpServlet {
 
-    private final TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private TemplateEngine templateEngine;
     private ProductController productController;
 
 
@@ -49,5 +49,6 @@ public class ProductFormHandlerServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productController = (ProductController) this.getServletContext().getAttribute("productController");
+        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

@@ -15,7 +15,7 @@ import java.util.*;
 @WebServlet(name = "SearchProductServlet", urlPatterns = "/search")
 public class SearchServlet extends HttpServlet {
 
-    private TemplateEngine templateEngine = TemplateEngine.getInstance();
+    private TemplateEngine templateEngine;
     private ProductController productController;
 
     @Override
@@ -35,5 +35,6 @@ public class SearchServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productController = (ProductController) this.getServletContext().getAttribute("productController");
+        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }
