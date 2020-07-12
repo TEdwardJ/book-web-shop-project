@@ -8,6 +8,7 @@ import org.eclipse.jetty.servlet.*;
 
 
 import javax.servlet.DispatcherType;
+import javax.servlet.ServletContextListener;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class WebShopServer {
         server.setConnectors(new Connector[]{connector});
 
         ServletContextHandler mainContextHandler = new ServletContextHandler();
-
+        mainContextHandler.addEventListener(new ConfigContextListener());
         mainContextHandler.setContextPath("/");
         mainContextHandler.setResourceBase("target/classes/static");
 
@@ -36,6 +37,7 @@ public class WebShopServer {
         ErrorPageErrorHandler handler404error = initErrorHandler();
 
         mainContextHandler.setErrorHandler(handler404error);
+
         server.setHandler(mainContextHandler);
         server.start();
 

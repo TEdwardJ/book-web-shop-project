@@ -21,30 +21,19 @@ public class GetProductRedirectFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        logger.info("Filter Request with method {}, url {}",((Request) request).getMethod(),((Request) request).getRequestURI());
-        if (!((Request) request).getMethod().equals("GET")) {
-
-        } else {
+        logger.info("Filter Request with method {}, url {}", ((Request) request).getMethod(), ((Request) request).getRequestURI());
+        if (((Request) request).getMethod().equals("GET")) {
             final String requestURI = ((HttpServletRequest) request).getRequestURI();
-            /*if ("/".equals(requestURI)) {
-                request.getRequestDispatcher("/product/all").forward(request, response);
-            } else */if (requestURI.startsWith("/product")) {
-                if (requestURI.startsWith("/product/all")) {
-                    chain.doFilter(request, response);
-                    return;
-                } else
-                if (requestURI.startsWith("/product/add")) {
-                    chain.doFilter(request, response);
-                    return;
-                } else if (requestURI.startsWith("/product/edit/")) {
+            if (requestURI.startsWith("/product")) {
+                /*if (requestURI.startsWith("/product/edit/")) {
                     chain.doFilter(request, response);
                     return;
                 } else if (!requestURI.matches("/product/[0-9]+")) {
                     ((HttpServletResponse) response).sendRedirect("/notFound.html");
-                }
+                }*/
             }
-        chain.doFilter(request, response);
         }
+        chain.doFilter(request, response);
     }
 
     @Override

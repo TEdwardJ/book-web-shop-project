@@ -2,6 +2,7 @@ package edu.ted.webshop.dao;
 
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
+import edu.ted.webshop.utils.ProductRowMapper;
 import edu.ted.webshop.utils.TemplateEngine;
 import edu.ted.webshop.utils.PropertyReader;
 import freemarker.template.TemplateException;
@@ -17,9 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-public final class JdbcProductDao {
-    private final static JdbcProductDao instance = new JdbcProductDao();
-
+public class JdbcProductDao {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private PostgresDataSourceFactory defaultDataSourceFactory;
@@ -29,7 +28,7 @@ public final class JdbcProductDao {
     private DataSource dataSource;
     private Properties queries;
 
-    private JdbcProductDao() {
+    public JdbcProductDao() {
         try {
             defaultDataSourceFactory = new PostgresDataSourceFactory("db.properties");
             dataSource = defaultDataSourceFactory.getDataSource();
@@ -38,11 +37,6 @@ public final class JdbcProductDao {
             e.printStackTrace();
             logger.error("Error while JdbcProductDao was ccreating{}",e);
         }
-
-    }
-
-    public static JdbcProductDao getInstance(){
-        return instance;
     }
 
     public List<Product> getAll() {
@@ -82,10 +76,9 @@ public final class JdbcProductDao {
             logger.error("Query preparation error occured. See log above");
             throw new DataException(e);
         }
-
     }
 
-    private String getPreparedQuery(String queryName, Map parametersMap) throws IOException, TemplateException {
+    String getPreparedQuery(String queryName, Map parametersMap) throws IOException, TemplateException {
         String query = queries.getProperty(queryName);
         StringWriter writer = new StringWriter();
 

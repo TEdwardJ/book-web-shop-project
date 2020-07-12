@@ -24,7 +24,6 @@ public class ErrorHandlerServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/errorHandler");
-        //String keyWord = Optional.ofNullable(req.getParameter("keyWord")).orElse("");
         Map map = new HashMap();
         StringWriter errorWriter = new StringWriter();
         Arrays.asList(requestDispatcher.ERROR_STATUS_CODE, requestDispatcher.ERROR_EXCEPTION_TYPE, requestDispatcher.ERROR_MESSAGE)
