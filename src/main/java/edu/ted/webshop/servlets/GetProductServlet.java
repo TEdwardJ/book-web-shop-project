@@ -24,7 +24,7 @@ public class GetProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         productController.getProductById(req, map);
         templateEngine.writePage("product.html",resp.getWriter(),map);
     }

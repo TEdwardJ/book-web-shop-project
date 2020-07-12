@@ -5,8 +5,6 @@ import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.entity.ProductDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;

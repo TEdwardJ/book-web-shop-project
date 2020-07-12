@@ -8,7 +8,6 @@ import org.eclipse.jetty.servlet.*;
 
 
 import javax.servlet.DispatcherType;
-import javax.servlet.ServletContextListener;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -44,12 +43,12 @@ public class WebShopServer {
     }
 
     private void initFilters(ServletContextHandler mainContextHandler) {
-        mainContextHandler.addFilter(GetProductRedirectFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        mainContextHandler.addFilter(LoggingFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
     }
 
     private void initServlets(ServletContextHandler mainContextHandler) {
         mainContextHandler.addServlet(new ServletHolder(new AllProductsServlet()), "");
-        mainContextHandler.addServlet(AllProductsServlet.class, "/product/all");
+        //mainContextHandler.addServlet(AllProductsServlet.class, "/product/all");
         mainContextHandler.addServlet(GetProductServlet.class, "/product/*");
         mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/edit/*");
         mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/add");

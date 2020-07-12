@@ -22,7 +22,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         productController.processProductFormSubmission(req, map);
 
         resp.setContentType("text/html;charset=utf-8");
@@ -34,7 +34,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         Product newProduct = productController.getProductById(req, map);
 
         if (newProduct == null) {

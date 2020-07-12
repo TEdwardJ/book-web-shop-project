@@ -74,13 +74,13 @@ class ProductControllerTest {
         when(req.getRequestURI()).thenReturn("/product/12");
         when(req.getServletPath()).thenReturn("/product");
         when(productDao.getOneById(12)).thenReturn(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5)));
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         final Product returnedProduct = controller.getProductById(req, map);
         assertEquals(12, returnedProduct.getId());
         assertEquals("mockProduct", returnedProduct.getName());
         assertEquals("mockProductDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal(45.5), returnedProduct.getPrice());
+        assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
         assertTrue(map.containsKey("product"));
         assertEquals(returnedProduct, map.get("product"));
     }
@@ -91,7 +91,7 @@ class ProductControllerTest {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn("mockProduct");
         when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         controller.searchProductByKeyWord(req, map);
         assertTrue(map.containsKey("keyWord"));
         assertTrue(map.containsKey("productCount"));
@@ -102,7 +102,7 @@ class ProductControllerTest {
         assertEquals("mockProduct", returnedProduct.getName());
         assertEquals("mockProductDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal(45.5), returnedProduct.getPrice());
+        assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
     }
 
 
@@ -111,7 +111,7 @@ class ProductControllerTest {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn(null);
         when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         controller.searchProductByKeyWord(req, map);
         assertFalse(map.containsKey("keyWord"));
         assertFalse(map.containsKey("productCount"));
@@ -121,7 +121,7 @@ class ProductControllerTest {
     @Test
     void whenReturnsListOfProducts_thenCorrect() {
         when(productDao.getAll()).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         controller.getAll(map);
         assertTrue(map.containsKey("productCount"));
         assertTrue(map.containsKey("productList"));
@@ -131,7 +131,7 @@ class ProductControllerTest {
         assertEquals("mockProduct", returnedProduct.getName());
         assertEquals("mockProductDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal(45.5), returnedProduct.getPrice());
+        assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
     }
 
     @Test
@@ -170,7 +170,7 @@ class ProductControllerTest {
         when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
         when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal(33.2)));
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         controller.processProductFormSubmission(req, map);
         assertTrue(map.containsKey("product"));
         Product returnedProduct = (Product) map.get("product");
@@ -178,7 +178,7 @@ class ProductControllerTest {
         assertEquals("mockName", returnedProduct.getName());
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal(33.2), returnedProduct.getPrice());
+        assertEquals(new BigDecimal("33.2"), returnedProduct.getPrice());
     }
 
     @Test
@@ -187,7 +187,7 @@ class ProductControllerTest {
         when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
         when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal(33.2)));
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         controller.processProductFormSubmission(req, map);
         assertTrue(map.containsKey("product"));
         Product returnedProduct = (Product) map.get("product");
@@ -195,6 +195,6 @@ class ProductControllerTest {
         assertEquals("mockName", returnedProduct.getName());
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal(33.2), returnedProduct.getPrice());
+        assertEquals(new BigDecimal("33.2"), returnedProduct.getPrice());
     }
 }

@@ -22,7 +22,7 @@ public class SearchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
 
         productController.searchProductByKeyWord(req, map);
         if (!map.containsKey("keyWord")) {
