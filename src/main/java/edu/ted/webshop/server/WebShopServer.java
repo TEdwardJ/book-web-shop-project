@@ -11,19 +11,19 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 import java.util.Optional;
 
-public class WebShopServer {
+public class WebShopServer extends Server {
 
-    private Server server;
+    //private Server server;
 
-    public void start() throws Exception {
+    public void init() {
         System.out.println(System.getenv("PORT")+" is the port");
 
         Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
 
-        server = new Server();
-        ServerConnector connector = new ServerConnector(server);
+        //server = new Server();
+        ServerConnector connector = new ServerConnector(this);
         connector.setPort(port);
-        server.setConnectors(new Connector[]{connector});
+        this.setConnectors(new Connector[]{connector});
 
         ServletContextHandler mainContextHandler = new ServletContextHandler();
         mainContextHandler.addEventListener(new ConfigContextListener());
@@ -37,10 +37,13 @@ public class WebShopServer {
 
         mainContextHandler.setErrorHandler(handler404error);
 
-        server.setHandler(mainContextHandler);
-        server.start();
+        this.setHandler(mainContextHandler);
 
     }
+/*
+    public void stop() throws Exception {
+        super.stop();
+    }*/
 
     private void initFilters(ServletContextHandler mainContextHandler) {
         mainContextHandler.addFilter(LoggingFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
