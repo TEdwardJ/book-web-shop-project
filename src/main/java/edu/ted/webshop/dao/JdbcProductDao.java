@@ -21,7 +21,7 @@ import java.util.*;
 public class JdbcProductDao {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private PostgresDataSourceFactory defaultDataSourceFactory;
+    private DataSourceFactory dataSourceFactory;
 
     private final TemplateEngine templateEngine;
 
@@ -31,8 +31,8 @@ public class JdbcProductDao {
     public JdbcProductDao(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
         try {
-            defaultDataSourceFactory = new PostgresDataSourceFactory("db.properties");
-            dataSource = defaultDataSourceFactory.getDataSource();
+            dataSourceFactory = new ShopDataSourceFactory("db.properties");
+            dataSource = dataSourceFactory.getDataSource();
             queries = PropertyReader.readPropertyFile("query.properties");
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class JdbcProductDao {
     public List<Product> searchProducts(String keyWord) {
         List<Product> productsList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
-            Map parametersMap = new HashMap();
+            Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("keyWord", keyWord);
             Statement statement = connection.createStatement();
             String query = getPreparedQuery("searchAll", parametersMap);
@@ -91,7 +91,7 @@ public class JdbcProductDao {
         try (Connection connection = dataSource.getConnection()) {
 
             Statement statement = connection.createStatement();
-            Map parametersMap = new HashMap();
+            Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("productId", id);
             String query = getPreparedQuery("getOne", parametersMap);
 
@@ -114,7 +114,7 @@ public class JdbcProductDao {
     public Product updateOne(Product product) {
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
-            Map parametersMap = new HashMap();
+            Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("product", product);
             String query = getPreparedQuery("updateOne", parametersMap);
             boolean executed = statement.execute(query);
@@ -131,7 +131,7 @@ public class JdbcProductDao {
     public Product insertOne(Product product) {
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
-            Map parametersMap = new HashMap();
+            Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("product", product);
             String query = getPreparedQuery("insertNew", parametersMap);
 

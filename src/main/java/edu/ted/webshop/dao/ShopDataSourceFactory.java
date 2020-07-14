@@ -1,7 +1,7 @@
 package edu.ted.webshop.dao;
 
 import edu.ted.webshop.utils.PropertyReader;
-import org.postgresql.ds.PGSimpleDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,22 +11,23 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
-public class PostgresDataSourceFactory {
+public class ShopDataSourceFactory implements DataSourceFactory {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Properties dataSourceProperties;
 
-    public PostgresDataSourceFactory(String propertiesFile) throws IOException {
+    public ShopDataSourceFactory(String propertiesFile) throws IOException {
         dataSourceProperties = PropertyReader.readPropertyFile(propertiesFile);
         logger.info("dsProperties {}", dataSourceProperties);
     }
 
     public DataSource getDataSource() {
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        BasicDataSource dataSource = new BasicDataSource();
         String dbUriString = System.getenv("DATABASE_URL");
-        logger.info("Heroku DBUrlString: {}", dbUriString);
+        //Heroku case
         if (dbUriString != null) {
+            logger.info("Heroku DBUrlString: {}", dbUriString);
             try {
                 URI dbUri = new URI(dbUriString);
                 String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
@@ -37,16 +38,17 @@ public class PostgresDataSourceFactory {
                 String username = dbUri.getUserInfo().split(":")[0];
                 String password = dbUri.getUserInfo().split(":")[1];
 
-                dataSource.setUser(username);
+                dataSource.setUsername(username);
                 logger.info("Heroku DB user: {}", username);
                 dataSource.setPassword(password);
             } catch (URISyntaxException e) {
                 logger.error("Configuration of DataSource Failed: {}", e);
             }
+            //Local cases - real DB and testDB
         } else {
-            dataSource.setServerNames(new String[]{dataSourceProperties.getProperty("db.serverName")});
-            dataSource.setPortNumbers(new int[]{Integer.parseInt(dataSourceProperties.getProperty("db.port"))});
-            dataSource.setUser(dataSourceProperties.getProperty("db.user"));
+            dataSource.setUrl(dataSourceProperties.getProperty("db.url"));
+            dataSource.setDriverClassName(dataSourceProperties.getProperty("db.driverClassName"));
+            dataSource.setUsername(dataSourceProperties.getProperty("db.user"));
             dataSource.setPassword(dataSourceProperties.getProperty("db.password"));
         }
         return dataSource;
