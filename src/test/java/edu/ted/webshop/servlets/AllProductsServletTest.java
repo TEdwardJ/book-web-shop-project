@@ -27,8 +27,6 @@ class AllProductsServletTest {
     @BeforeEach
     public void startServer() throws Exception
     {
-
-
         server = new WebShopServer();
         server.init();
         server.start();

@@ -1,12 +1,10 @@
 package edu.ted.webshop.dao;
 
-import edu.ted.webshop.utils.PropertyReader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
@@ -17,9 +15,8 @@ public class ShopDataSourceFactory implements DataSourceFactory {
 
     private Properties dataSourceProperties;
 
-    public ShopDataSourceFactory(String propertiesFile) throws IOException {
-        dataSourceProperties = PropertyReader.readPropertyFile(propertiesFile);
-        logger.info("dsProperties {}", dataSourceProperties);
+    public void setDataSourceProperties(Properties dataSourceProperties) {
+        this.dataSourceProperties = dataSourceProperties;
     }
 
     public DataSource getDataSource() {
@@ -44,7 +41,7 @@ public class ShopDataSourceFactory implements DataSourceFactory {
             } catch (URISyntaxException e) {
                 logger.error("Configuration of DataSource Failed: {}", e);
             }
-            //Local cases - real DB and testDB
+            //Local cases - real DB and test DB
         } else {
             dataSource.setUrl(dataSourceProperties.getProperty("db.url"));
             dataSource.setDriverClassName(dataSourceProperties.getProperty("db.driverClassName"));

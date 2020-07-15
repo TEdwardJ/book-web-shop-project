@@ -28,16 +28,11 @@ public class JdbcProductDao {
     private DataSource dataSource;
     private Properties queries;
 
-    public JdbcProductDao(TemplateEngine templateEngine) {
+    public JdbcProductDao(DataSourceFactory dataSourceFactory, TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
-        try {
-            dataSourceFactory = new ShopDataSourceFactory("db.properties");
-            dataSource = dataSourceFactory.getDataSource();
-            queries = PropertyReader.readPropertyFile("query.properties");
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("Error while JdbcProductDao was ccreating{}",e);
-        }
+        this.dataSourceFactory = dataSourceFactory;
+        dataSource = dataSourceFactory.getDataSource();
+        queries = PropertyReader.readPropertyFile("query.properties");
     }
 
     public List<Product> getAll() {
