@@ -19,7 +19,7 @@ import java.sql.Statement;
 import java.util.*;
 
 public class JdbcProductDao {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private DataSourceFactory dataSourceFactory;
 
