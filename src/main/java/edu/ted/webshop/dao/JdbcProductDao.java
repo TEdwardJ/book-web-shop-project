@@ -124,20 +124,18 @@ public class JdbcProductDao {
     }
 
     public Product insertOne(Product product) {
+        int newProductId = 0;
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("product", product);
             String query = getPreparedQuery("insertNew", parametersMap);
-
-            if (statement.execute(query)) {
-                ResultSet result = statement.getResultSet();
-                if (result.next()) {
-                    int newProductId = result.getInt(1);
-                    return getOneById(newProductId);
-                }
+            statement.execute(query, Statement.RETURN_GENERATED_KEYS);
+            ResultSet result = statement.getGeneratedKeys();
+            if (result.next()) {
+                newProductId = result.getInt(1);
             }
-            return product;
+            connection.commit();
         } catch (SQLException throwables) {
             logger.error("DB Error occured: {}", throwables);
             throw new DataException("Attempt to add one product into DB failed", throwables);
@@ -145,6 +143,7 @@ public class JdbcProductDao {
             logger.error("Query preparation error occured. See log above");
             throw new DataException(e);
         }
+        return getOneById(newProductId);
     }
 
 }

@@ -22,8 +22,7 @@ public class ConfigContextListener implements ServletContextListener {
         final ServletContext servletContext = sce.getServletContext();
         final TemplateEngine templateEngine = new TemplateEngine();
         servletContext.setAttribute("templateEngine", templateEngine);
-        Properties dataSourceProperties = null;
-        dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
+        Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         logger.info("dsProperties {}", dataSourceProperties);
         final ShopDataSourceFactory dataSourceFactory = new ShopDataSourceFactory();
         dataSourceFactory.setDataSourceProperties(dataSourceProperties);
