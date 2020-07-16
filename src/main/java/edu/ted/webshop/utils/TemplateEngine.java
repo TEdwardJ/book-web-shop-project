@@ -22,7 +22,6 @@ public class TemplateEngine {
     private static final String BASE_TEMPLATE_PATH = "/product/";
 
     private final Configuration webConfiguration;
-    private final Configuration dbConfiguration;
 
     public TemplateEngine() {
         webConfiguration = new Configuration(Configuration.VERSION_2_3_30);
@@ -34,25 +33,13 @@ public class TemplateEngine {
         webConfiguration.setLogTemplateExceptions(false);
         webConfiguration.setWrapUncheckedExceptions(true);
         webConfiguration.setFallbackOnNullLoopVariable(false);
+        //webConfiguration.setSetting("currencyCode", "UAH");
         Map<String, TemplateNumberFormatFactory> customNumberFormats
                 = new HashMap<String, TemplateNumberFormatFactory>();
-        customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("0.00"));
+        customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("#,##0.00 ¤;; currencyCode=UAH"));
         webConfiguration.setCustomNumberFormats(customNumberFormats);
 
-        //
-        dbConfiguration = new Configuration(Configuration.VERSION_2_3_30);
-        dbConfiguration.setClassForTemplateLoading(WebShopServer.class, BASE_TEMPLATE_PATH);
 
-
-        dbConfiguration.setDefaultEncoding("UTF-8");
-        dbConfiguration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        dbConfiguration.setLogTemplateExceptions(false);
-        dbConfiguration.setWrapUncheckedExceptions(true);
-        dbConfiguration.setFallbackOnNullLoopVariable(false);
-        Map<String, TemplateNumberFormatFactory> dbCustomNumberFormats
-                = new HashMap<String, TemplateNumberFormatFactory>();
-        dbCustomNumberFormats.put("price", new AliasTemplateNumberFormatFactory("0.##"));
-        dbConfiguration.setCustomNumberFormats(dbCustomNumberFormats);
     }
 
     public void writePage(String page, Writer writer, Map fieldsMap) {
@@ -72,7 +59,7 @@ public class TemplateEngine {
     public void writeString(String templateName, String templateStr, Writer writer, Map fieldsMap) throws TemplateException, IOException {
         try {
             Template template = new Template(templateName, new StringReader(templateStr),
-                    dbConfiguration);
+                    webConfiguration);
             template.process(fieldsMap, writer);
         } catch (TemplateException e) {
             logger.error("Template Engine Error occured when SQL query was preparing: {}", e);

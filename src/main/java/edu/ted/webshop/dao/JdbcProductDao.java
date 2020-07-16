@@ -41,6 +41,7 @@ public class JdbcProductDao {
 
             Statement statement = connection.createStatement();
             boolean executed = statement.execute(queries.getProperty("selectAll"));
+            logger.debug("Prepared Query: {}", queries.getProperty("selectAll"));
             ResultSet results = statement.getResultSet();
             while (results.next()) {
                 productsList.add(ProductRowMapper.map(results));
@@ -59,6 +60,7 @@ public class JdbcProductDao {
             parametersMap.put("keyWord", keyWord);
             Statement statement = connection.createStatement();
             String query = getPreparedQuery("searchAll", parametersMap);
+            logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
             ResultSet results = statement.getResultSet();
             while (results.next()) {
@@ -89,7 +91,7 @@ public class JdbcProductDao {
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("productId", id);
             String query = getPreparedQuery("getOne", parametersMap);
-
+            logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
             ResultSet results = statement.getResultSet();
             while (results.next()) {
@@ -112,6 +114,7 @@ public class JdbcProductDao {
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("product", product);
             String query = getPreparedQuery("updateOne", parametersMap);
+            logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
             return getOneById(product.getId());
         } catch (SQLException throwables) {
@@ -130,6 +133,7 @@ public class JdbcProductDao {
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("product", product);
             String query = getPreparedQuery("insertNew", parametersMap);
+            logger.debug("Prepared Query: {}", query);
             statement.execute(query, Statement.RETURN_GENERATED_KEYS);
             ResultSet result = statement.getGeneratedKeys();
             if (result.next()) {
