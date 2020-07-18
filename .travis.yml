@@ -6,4 +6,4 @@ deploy:
   app: guarded-island-73737
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t 1c618d55-c886-4a3b-9ef5-5738572f98cb
