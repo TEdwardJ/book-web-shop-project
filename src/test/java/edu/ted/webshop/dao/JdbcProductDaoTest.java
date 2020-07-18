@@ -3,11 +3,15 @@ package edu.ted.webshop.dao;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.utils.PropertyReader;
 import edu.ted.webshop.utils.TemplateEngine;
+import freemarker.template.TemplateException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +52,15 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void getPreparedQuery() {
+    void getPreparedQuery() throws IOException, TemplateException {
+        Map<String, Object> parametersMap = new HashMap<>();
+        final String keyWord = "iPhone";
+        parametersMap.put("keyWord", keyWord);
+
+        String queryName = "searchAll";
+        String preparedQuery = productDao.getPreparedQuery(queryName, parametersMap);
+        assertTrue(preparedQuery.contains("SELECT * FROM"));
+        assertTrue(preparedQuery.contains("'"+keyWord+"'"));
     }
 
     @Test
