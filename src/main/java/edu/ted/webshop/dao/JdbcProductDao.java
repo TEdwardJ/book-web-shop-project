@@ -32,7 +32,10 @@ public class JdbcProductDao {
         this.templateEngine = templateEngine;
         this.dataSourceFactory = dataSourceFactory;
         dataSource = dataSourceFactory.getDataSource();
-        queries = PropertyReader.readPropertyFile("query.properties");
+    }
+
+    public void setQueries(Properties queries) {
+        this.queries = queries;
     }
 
     public List<Product> getAll() {

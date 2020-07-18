@@ -26,6 +26,8 @@ class JdbcProductDaoTest {
         final ShopDataSourceFactory dataSourceFactory = new ShopDataSourceFactory();
         dataSourceFactory.setDataSourceProperties(dataSourceProperties);
         productDao = new JdbcProductDao(dataSourceFactory, new TemplateEngine());
+        Properties queries = PropertyReader.readPropertyFile("query.properties");
+        productDao.setQueries(queries);
     }
 
     @Test
@@ -65,7 +67,6 @@ class JdbcProductDaoTest {
 
     @Test
     void givenExistingId_whenReturned_thenCorrect() {
-        //INSERT INTO webshop.ws_products (product_id, product_name, product_description, product_picture_url, product_price) VALUES (24, 'It : film tie-in edition of Stephen...', 'Stephen King. It : film tie-in edition of Stephen...', 'https://book-ye.com.ua/upload/resize_cache/iblock/7b7/230_355_1/f02736e4_430c_11e8_80f3_000c29ae1566_83f10533_da08_11e9_8120_000c29ae1566.jpg', 324);
         int productId = 24;
         final Product product = productDao.getOneById(productId);
         assertNotNull(product);
@@ -78,7 +79,6 @@ class JdbcProductDaoTest {
 
     @Test
     void givenNonExistingId_whenReturned_thenCorrect() {
-        //INSERT INTO webshop.ws_products  (28, 'The Bazaar of Bad Dreams Export', 'Stephen King. The Bazaar of Bad Dreams Export', 'https://book-ye.com.ua/upload/resize_cache/iblock/1f5/230_355_1/91c36244_917f_11e7_80cf_000c29ae1566_469831ce_a092_11e7_80d1_000c29ae1566.jpg', 262);
         int productId = 2228;
         assertNull(productDao.getOneById(productId));
     }
