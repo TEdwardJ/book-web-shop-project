@@ -19,6 +19,10 @@ public class ShopDataSourceFactory implements DataSourceFactory {
         this.dataSourceProperties = dataSourceProperties;
     }
 
+    public Properties getDataSourceProperties() {
+        return dataSourceProperties;
+    }
+
     public DataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         String dbUriString = System.getenv("DATABASE_URL");
