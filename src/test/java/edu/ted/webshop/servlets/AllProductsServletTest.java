@@ -14,11 +14,12 @@ import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.Is.is;
 
-class AllProductsServletTest {
+
+public class AllProductsServletTest {
 
     private WebShopServer server;
 
@@ -43,7 +44,7 @@ class AllProductsServletTest {
     }
 
     @Test
-    void doGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
+    public void doGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
 
         URI uri = new URI("http://127.0.0.1:8081/").resolve("/");
         ContentResponse response = client.newRequest(uri)
@@ -53,6 +54,6 @@ class AllProductsServletTest {
 
         // test response content
         String responseBody = response.getContentAsString();
-        assertThat("Response Content", responseBody, containsString("General Product List"));
+        assertThat("Response Content", responseBody, containsString("General Books List"));
     }
 }

@@ -16,7 +16,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JdbcProductDaoTest {
+public class JdbcProductDaoTest {
 
     private static JdbcProductDao productDao;
 
@@ -31,13 +31,13 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void whenGetAllReturnsList_thenCorrect() {
+    public void whenGetAllReturnsList_thenCorrect() {
         final List<Product> allProducts = productDao.getAll();
         assertFalse(allProducts.isEmpty());
     }
 
     @Test
-    void givenKeyWordExistingInDB_whenSearchReturnsResults_thenCorrect() {
+    public void givenKeyWordExistingInDB_whenSearchReturnsResults_thenCorrect() {
         final String keyWord = "King";
         final List<Product> allProducts = productDao.searchProducts(keyWord);
         assertFalse(allProducts.isEmpty());
@@ -47,14 +47,14 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void givenKeyWordNonExistingInDB_whenSearchReturnsResults_thenCorrect() {
+    public void givenKeyWordNonExistingInDB_whenSearchReturnsResults_thenCorrect() {
         final String keyWord = "@##@#";
         final List<Product> allProducts = productDao.searchProducts(keyWord);
         assertTrue(allProducts.isEmpty());
     }
 
     @Test
-    void getPreparedQuery() throws IOException, TemplateException {
+    public void getPreparedQuery() throws IOException, TemplateException {
         Map<String, Object> parametersMap = new HashMap<>();
         final String keyWord = "iPhone";
         parametersMap.put("keyWord", keyWord);
@@ -66,7 +66,7 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void givenExistingId_whenReturned_thenCorrect() {
+    public void givenExistingId_whenReturned_thenCorrect() {
         int productId = 24;
         final Product product = productDao.getOneById(productId);
         assertNotNull(product);
@@ -78,13 +78,13 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void givenNonExistingId_whenReturned_thenCorrect() {
+    public void givenNonExistingId_whenReturned_thenCorrect() {
         int productId = 2228;
         assertNull(productDao.getOneById(productId));
     }
 
     @Test
-    void givenExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
+    public void givenExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
         int productId = 28;
         final Product oldProduct = productDao.getOneById(productId);
         final String newDescription = oldProduct.getDescription() + ". New Edition";
@@ -102,7 +102,7 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void givenNewProductThenInsert_whenGetByIdReturnsNewProduct_thenCorrect() {
+    public void givenNewProductThenInsert_whenGetByIdReturnsNewProduct_thenCorrect() {
         final int productId = 2222;
         final String productName = "New Book";
         final String productDescription = "New Book Description";

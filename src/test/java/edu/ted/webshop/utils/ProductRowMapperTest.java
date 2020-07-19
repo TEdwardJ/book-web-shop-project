@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class ProductRowMapperTest {
+public class ProductRowMapperTest {
 
     @Mock
     private ResultSet resultSet;
@@ -25,11 +25,11 @@ class ProductRowMapperTest {
     @BeforeEach
     public void init(){
         product = new Product(3232, "productName", "productDescription", "", new BigDecimal(568));
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void map() throws SQLException {
+    public void map() throws SQLException {
         when(resultSet.getInt(1)).thenReturn(product.getId());
         when(resultSet.getString(2)).thenReturn(product.getName());
         when(resultSet.getString(3)).thenReturn(product.getDescription());

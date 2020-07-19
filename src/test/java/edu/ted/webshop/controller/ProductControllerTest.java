@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class ProductControllerTest {
+public class ProductControllerTest {
 
     private JdbcProductDao productDao;
     private ProductController controller;
@@ -30,14 +30,14 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenProductWithAllFieldsFilled_whenValidate_thenCorrect() {
+    public void givenProductWithAllFieldsFilled_whenValidate_thenCorrect() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "4.5");
         List<String> warningsList = controller.validateProduct(testedProduct);
         assertEquals(0, warningsList.size());
     }
 
     @Test
-    void givenProductWithEmptyName_whenValidate_thenWarning() {
+    public void givenProductWithEmptyName_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "", "description", "", "4.5");
         List<String> warningsList = controller.validateProduct(testedProduct);
         assertEquals(1, warningsList.size());
@@ -45,7 +45,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenProductWithEmptyPrice_whenValidate_thenWarning() {
+    public void givenProductWithEmptyPrice_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "");
         List<String> warningsList = controller.validateProduct(testedProduct);
         assertEquals(1, warningsList.size());
@@ -53,7 +53,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenProductWithPriceContainingLetters_whenValidate_thenWarning() {
+    public void givenProductWithPriceContainingLetters_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "fdf");
         List<String> warningsList = controller.validateProduct(testedProduct);
         assertEquals(1, warningsList.size());
@@ -61,7 +61,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenProductWithZeroPrice_whenValidate_thenWarning() {
+    public void givenProductWithZeroPrice_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "0");
         List<String> warningsList = controller.validateProduct(testedProduct);
         assertEquals(1, warningsList.size());
@@ -69,7 +69,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenProductId_whenReturnsProduct_thenCorrect() {
+    public void givenProductId_whenReturnsProduct_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getRequestURI()).thenReturn("/product/12");
         when(req.getServletPath()).thenReturn("/product");
@@ -87,7 +87,7 @@ class ProductControllerTest {
 
 
     @Test
-    void givenKeyWord_whenReturnsListOfProducts_thenCorrect() {
+    public void givenKeyWord_whenReturnsListOfProducts_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn("mockProduct");
         when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
@@ -107,7 +107,7 @@ class ProductControllerTest {
 
 
     @Test
-    void givenEmptyKeyWord_whenReturnsNull_thenCorrect() {
+    public void givenEmptyKeyWord_whenReturnsNull_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn(null);
         when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
@@ -119,7 +119,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void whenReturnsListOfProducts_thenCorrect() {
+    public void whenReturnsListOfProducts_thenCorrect() {
         when(productDao.getAll()).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
         Map<String, Object> map = new HashMap<>();
         controller.getAll(map);
@@ -135,7 +135,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenRequestToGetProduct_whenReturnProductId_thenCorrect() {
+    public void givenRequestToGetProduct_whenReturnProductId_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getRequestURI()).thenReturn("/product/12");
         when(req.getServletPath()).thenReturn("/product");
@@ -144,7 +144,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenRequestToEditProduct_whenReturnProductId_thenCorrect() {
+    public void givenRequestToEditProduct_whenReturnProductId_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getRequestURI()).thenReturn("/product/edit/12");
         when(req.getServletPath()).thenReturn("/product/edit");
@@ -153,7 +153,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenRequestAfterFormSubmission_whenGetProductDTOFromRequest_thenCorrect() {
+    public void givenRequestAfterFormSubmission_whenGetProductDTOFromRequest_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
         final ProductDTO productFromRequest = controller.getProductFromRequest(req);
@@ -165,10 +165,10 @@ class ProductControllerTest {
     }
 
     @Test
-    void givenRequestAfterFormSubmissionWithExistingProduct_whenUpdated_thenCorrect() {
+    public void givenRequestAfterFormSubmissionWithExistingProduct_whenUpdated_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
-        when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal(33.2)));
+        when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
 
         Map<String, Object> map = new HashMap<>();
         controller.processProductFormSubmission(req, map);
@@ -178,14 +178,14 @@ class ProductControllerTest {
         assertEquals("mockName", returnedProduct.getName());
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal("33.2"), returnedProduct.getPrice());
+        assertEquals(0, returnedProduct.getPrice().compareTo(new BigDecimal("33.2")));
     }
 
     @Test
-    void givenRequestAfterFormSubmissionWithExistingProduct_whenInserted_thenCorrect() {
+    public void givenRequestAfterFormSubmissionWithExistingProduct_whenInserted_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
-        when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal(33.2)));
+        when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
 
         Map<String, Object> map = new HashMap<>();
         controller.processProductFormSubmission(req, map);
