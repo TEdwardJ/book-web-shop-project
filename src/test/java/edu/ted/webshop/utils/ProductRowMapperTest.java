@@ -18,7 +18,7 @@ public class ProductRowMapperTest {
     @Mock
     private ResultSet resultSet;
 
-    private ProductRowMapper rowMapper = new ProductRowMapper();
+    private final ProductRowMapper rowMapper = new ProductRowMapper();
 
     private Product product;
 

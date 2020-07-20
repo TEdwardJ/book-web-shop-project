@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.Properties;
 
 public class PropertyReader {
-    private static Logger logger = LoggerFactory.getLogger(PropertyReader.class);
+    private final static Logger logger = LoggerFactory.getLogger(PropertyReader.class);
 
     public static Properties readPropertyFile(String propertiesFile) {
         logger.info("Property File To Read {}", propertiesFile);
