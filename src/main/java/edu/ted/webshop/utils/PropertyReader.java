@@ -17,7 +17,11 @@ public class PropertyReader {
         logger.info("Property File To Read {}", propertiesFile);
         Properties properties = new Properties();
         final URL resource = PropertyReader.class.getClassLoader().getResource(propertiesFile);
-        logger.info("Property file root path {}", resource.getPath());
+        if (resource == null) {
+            logger.warn("Resource {} not found {}", propertiesFile);
+            return properties;
+        }
+        logger.info("Property file {}", resource.getPath());
         try {
             InputStream resourceStream = resource.openStream();
             properties.load(resourceStream);

@@ -33,7 +33,7 @@ public class ProductController {
             validationErrorList.add("Product Price should be specified;");
         } else {
             try {
-                BigDecimal priceToValidate = new BigDecimal(productToValidate.getPrice());
+                new BigDecimal(productToValidate.getPrice());
             } catch (Exception e) {
                 validationErrorList.add("Product Price should not contains any characters except digits and delimiters;");
                 return validationErrorList;
