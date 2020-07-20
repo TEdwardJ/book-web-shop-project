@@ -1,6 +1,7 @@
 package edu.ted.webshop.servlets;
 
 import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletConfig;
@@ -25,8 +26,14 @@ public class GetProductServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        productController.getProductById(req, map);
-        templateEngine.writePage("product.html",resp.getWriter(),map);
+        final Product productById = productController.getProductById(req, map);
+
+        if (productById == null) {
+            resp.sendRedirect("/notFound.html");
+            return;
+        }
+
+        templateEngine.writePage("product.html", resp.getWriter(), map);
     }
 
     @Override

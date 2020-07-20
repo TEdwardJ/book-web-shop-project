@@ -35,10 +35,10 @@ public class ProductFormHandlerServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        Product newProduct = productController.getProductById(req, map);
+        Product productById = productController.getProductById(req, map);
 
-        if (newProduct == null) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        if (productById == null) {
+            resp.sendRedirect("/notFound.html");
             return;
         }
 

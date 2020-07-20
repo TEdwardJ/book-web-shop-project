@@ -46,7 +46,7 @@ public class ProductController {
         return validationErrorList;
     }
 
-    public Product getProductById(HttpServletRequest req, Map map) {
+    public Product getProductById(HttpServletRequest req, Map<String, Object> map) {
         Product newProduct;
         int productId = getParameterFromUrl(req);
 
@@ -59,7 +59,7 @@ public class ProductController {
         return newProduct;
     }
 
-    public void searchProductByKeyWord(HttpServletRequest req, Map map) {
+    public void searchProductByKeyWord(HttpServletRequest req, Map<String, Object> map) {
         String keyWord = Optional.ofNullable(req.getParameter("keyWord")).orElse("");
         List<Product> productsList;
         if (keyWord.isEmpty()) {
@@ -73,7 +73,7 @@ public class ProductController {
         map.put("includeSearchForm", true);
     }
 
-    public void getAll(Map map){
+    public void getAll(Map<String, Object> map){
         List<Product> productsList = productDao.getAll();
         map.put("productCount", productsList.size());
         map.put("productList", productsList);
@@ -100,7 +100,7 @@ public class ProductController {
         return new ProductDTO(productId, productName, productDescription, pictureUrl, price);
     }
 
-    public void processProductFormSubmission(HttpServletRequest req, Map map) {
+    public void processProductFormSubmission(HttpServletRequest req, Map<String, Object> map) {
         ProductDTO newProduct = getProductFromRequest(req);
         List<String> validationWarningList = validateProduct(newProduct);
         if (!validationWarningList.isEmpty()) {

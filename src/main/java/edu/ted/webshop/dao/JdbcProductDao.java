@@ -4,7 +4,6 @@ import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
 import edu.ted.webshop.utils.ProductRowMapper;
 import edu.ted.webshop.utils.TemplateEngine;
-import edu.ted.webshop.utils.PropertyReader;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +78,7 @@ public class JdbcProductDao {
         }
     }
 
-    String getPreparedQuery(String queryName, Map parametersMap) throws IOException, TemplateException {
+    String getPreparedQuery(String queryName, Map<String, Object> parametersMap) throws IOException, TemplateException {
         String query = queries.getProperty(queryName);
         StringWriter writer = new StringWriter();
 
@@ -97,7 +96,7 @@ public class JdbcProductDao {
             logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
             ResultSet results = statement.getResultSet();
-            while (results.next()) {
+            if (results.next()) {
                 Product product = ProductRowMapper.map(results);
                 return product;
             }
@@ -119,7 +118,7 @@ public class JdbcProductDao {
             String query = getPreparedQuery("updateOne", parametersMap);
             logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
-            return getOneById(product.getId());
+            connection.commit();
         } catch (SQLException throwables) {
             logger.error("DB Error occured: {}", throwables);
             throw new DataException("Attempt to update one product in DB failed", throwables);
@@ -127,6 +126,7 @@ public class JdbcProductDao {
             logger.error("Query preparation error occured. See log above");
             throw new DataException(e);
         }
+        return getOneById(product.getId());
     }
 
     public Product insertOne(Product product) {
