@@ -19,13 +19,21 @@ import java.util.Map;
 public class TemplateEngine {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String BASE_TEMPLATE_PATH = "/product/";
+    private final String baseTemplatePath;
 
-    private final Configuration webConfiguration;
+    private Configuration webConfiguration;
 
-    public TemplateEngine() {
+    public TemplateEngine(String baseTemplatePath) {
+        this.baseTemplatePath = baseTemplatePath;
+    }
+
+    public String getBaseTemplatePath() {
+        return baseTemplatePath;
+    }
+
+    public void init() {
         webConfiguration = new Configuration(Configuration.VERSION_2_3_30);
-        webConfiguration.setClassForTemplateLoading(WebShopServer.class, BASE_TEMPLATE_PATH);
+        webConfiguration.setClassForTemplateLoading(WebShopServer.class, baseTemplatePath);
 
 
         webConfiguration.setDefaultEncoding("UTF-8");
@@ -33,7 +41,6 @@ public class TemplateEngine {
         webConfiguration.setLogTemplateExceptions(false);
         webConfiguration.setWrapUncheckedExceptions(true);
         webConfiguration.setFallbackOnNullLoopVariable(false);
-        //webConfiguration.setSetting("currencyCode", "UAH");
         Map<String, TemplateNumberFormatFactory> customNumberFormats
                 = new HashMap<String, TemplateNumberFormatFactory>();
         customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("#,##0.00 ¤;; currencyCode=UAH"));
@@ -53,7 +60,6 @@ public class TemplateEngine {
             logger.error("Template Engine Error occured: {}", e);
             logger.error("Template page: {}", page);
         }
-
     }
 
     public void writeString(String templateName, String templateStr, Writer writer, Map fieldsMap) throws TemplateException, IOException {
@@ -70,6 +76,5 @@ public class TemplateEngine {
             logger.error("Template string: {}", templateName);
             throw e;
         }
-
     }
 }

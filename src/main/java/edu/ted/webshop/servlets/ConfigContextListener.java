@@ -20,7 +20,8 @@ public class ConfigContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
-        final TemplateEngine templateEngine = new TemplateEngine();
+        final TemplateEngine templateEngine = new TemplateEngine("/product/");
+        templateEngine.init();
         servletContext.setAttribute("templateEngine", templateEngine);
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         logger.info("dsProperties entries: {}", dataSourceProperties.size());

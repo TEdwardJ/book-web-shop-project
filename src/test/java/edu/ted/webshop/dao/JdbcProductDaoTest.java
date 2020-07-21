@@ -25,7 +25,7 @@ public class JdbcProductDaoTest {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         final ShopDataSourceFactory dataSourceFactory = new ShopDataSourceFactory();
         dataSourceFactory.setDataSourceProperties(dataSourceProperties);
-        productDao = new JdbcProductDao(dataSourceFactory, new TemplateEngine());
+        productDao = new JdbcProductDao(dataSourceFactory, new TemplateEngine("/product/"));
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         productDao.setQueries(queries);
     }
@@ -109,7 +109,7 @@ public class JdbcProductDaoTest {
         final String productDescription = "Non Existing Product Description";
         final BigDecimal newPrice = new BigDecimal(105);
         final Product oldProduct = new Product(productId, productName, productDescription, "", newPrice);
-        Product updatedProduct = productDao.updateOne(oldProduct);
+        final Product updatedProduct = productDao.updateOne(oldProduct);
         final Product product = productDao.getOneById(productId);
         assertNull(updatedProduct);
     }
