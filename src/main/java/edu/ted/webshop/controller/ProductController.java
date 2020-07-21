@@ -93,11 +93,14 @@ public class ProductController {
     ProductDTO getProductFromRequest(HttpServletRequest req) {
         String productId = req.getParameter("id");
 
+        String productVersion = req.getParameter("versionId");
         String productName = req.getParameter("name");
         String productDescription = req.getParameter("description");
         String pictureUrl = req.getParameter("pictureUrl");
         String price = Optional.ofNullable(req.getParameter("price")).orElse("0");
-        return new ProductDTO(productId, productName, productDescription, pictureUrl, price);
+        final ProductDTO productDTO = new ProductDTO(productId, productName, productDescription, pictureUrl, price);
+        productDTO.setVersionId(productVersion);
+        return productDTO;
     }
 
     public void processProductFormSubmission(HttpServletRequest req, Map<String, Object> map) {

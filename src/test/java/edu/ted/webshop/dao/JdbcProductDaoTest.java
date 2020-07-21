@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,6 +84,7 @@ public class JdbcProductDaoTest {
     public void givenExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
         int productId = 28;
         final Product oldProduct = productDao.getOneById(productId);
+        final String oldProductVersion = oldProduct.getVersionId();
         final String newDescription = oldProduct.getDescription() + ". New Edition";
         oldProduct.setDescription(newDescription);
         final BigDecimal newPrice = oldProduct.getPrice().add(new BigDecimal(100));
@@ -94,12 +92,43 @@ public class JdbcProductDaoTest {
         Product updatedProduct = productDao.updateOne(oldProduct);
         final Product product = productDao.getOneById(productId);
         assertNotNull(product);
+        assertNotEquals(oldProductVersion, product.getVersionId());
         assertEquals(productId, product.getId());
         assertEquals("The Bazaar of Bad Dreams Export", product.getName());
         assertEquals(newDescription, product.getDescription());
         assertEquals(newPrice, product.getPrice());
         assertFalse(product.getPictureUrl().isEmpty());
         assertEquals(updatedProduct, product);
+    }
+
+    @Test
+    public void givenExistingIdAndGetProductAndChangeAndUpdateButTheProductWasAlreadyUpdatedInParallel_whenGetByIdReturnsNonUpdated_thenCorrect() {
+        int productId = 28;
+        final Product productVersion0 = productDao.getOneById(productId);
+        final String product0Version = productVersion0.getVersionId();
+        final String newDescription = productVersion0.getDescription() + ". New Edition";
+        productVersion0.setDescription(newDescription);
+        final BigDecimal newPrice = productVersion0.getPrice().add(new BigDecimal(100));
+        productVersion0.setPrice(newPrice);
+        final Product productVersion0UpdatedToVersion1 = productDao.updateOne(productVersion0);
+        final Product productVersion1 = productDao.getOneById(productId);
+        assertNotNull(productVersion1);
+        assertNotEquals(product0Version, productVersion1.getVersionId());
+        assertEquals(productId, productVersion1.getId());
+        assertEquals("The Bazaar of Bad Dreams Export", productVersion1.getName());
+        assertEquals(newDescription, productVersion1.getDescription());
+        assertEquals(newPrice, productVersion1.getPrice());
+        assertFalse(productVersion1.getPictureUrl().isEmpty());
+        assertEquals(productVersion0UpdatedToVersion1, productVersion1);
+
+        //Imitate kinda the product was updated in parallel session
+        final String product1Version = productVersion1.getVersionId();
+        productVersion1.setVersionId(UUID.randomUUID().toString());
+        productVersion1.setDescription(productVersion1.getDescription()+"!!!");
+        final Product productVersion1NotUpdatedToVersion2 = productDao.updateOne(productVersion1);
+        assertNotEquals(productVersion1.getVersionId(), productVersion1NotUpdatedToVersion2.getVersionId());
+        assertEquals(product1Version, productVersion1NotUpdatedToVersion2.getVersionId());
+        assertNotEquals(productVersion1.getDescription(), productVersion1NotUpdatedToVersion2.getDescription());
     }
 
     @Test

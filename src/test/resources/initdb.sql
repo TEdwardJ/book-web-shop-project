@@ -7,6 +7,7 @@ CREATE TABLE ws_products(
     product_picture_url character varying(1024),
     product_price double precision,
     creation_date time DEFAULT CURRENT_TIME,
+    product_version_id character varying(128),
     CONSTRAINT ws_products_pkey PRIMARY KEY (product_id)
 );
 

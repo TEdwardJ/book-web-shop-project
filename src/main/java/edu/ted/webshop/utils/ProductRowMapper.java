@@ -13,12 +13,14 @@ public class ProductRowMapper {
 
     public static Product map(ResultSet result) {
         try {
-            return new Product(result.getInt(1),
+            final Product product = new Product(result.getInt(1),
                     result.getString(2),
                     result.getString(3),
                     result.getString(4),
                     result.getBigDecimal(5)
             );
+            product.setVersionId(result.getString(7));
+            return product;
         } catch (SQLException throwables) {
             logger.error("Error occured: {}", throwables);
             throw new DataException("Attempt to create Product object based on DB data failed", throwables);

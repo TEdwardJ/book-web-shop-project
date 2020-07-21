@@ -6,11 +6,13 @@ import java.util.Map;
 
 public class ProductDTO {
 
-        private String id;
-        private String name;
-        private String description;
-        private String pictureUrl;
-        private String price;
+    private String id;
+    private String name;
+    private String description;
+    private String pictureUrl;
+    private String price;
+
+    private String versionId;
 
     public ProductDTO(String id, String name, String description, String pictureUrl, String price) {
         this.id = id;
@@ -18,6 +20,14 @@ public class ProductDTO {
         this.description = description;
         this.pictureUrl = pictureUrl;
         this.price = price;
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
     }
 
     public String getId() {
@@ -59,8 +69,11 @@ public class ProductDTO {
     public void setPrice(String price) {
         this.price = price;
     }
-    public Product getProduct(){
+
+    public Product getProduct() {
         BigDecimal productPrice = new BigDecimal(price.replace(",", "."));
-        return new Product(Integer.parseInt(id), name, description, pictureUrl, productPrice);
+        final Product product = new Product(Integer.parseInt(id), name, description, pictureUrl, productPrice);
+        product.setVersionId(this.getVersionId());
+        return product;
     }
 }

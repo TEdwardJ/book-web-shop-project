@@ -12,6 +12,15 @@ public class Product {
     private String pictureUrl;
     private BigDecimal price = new BigDecimal(0);
     private Map<String, String> properties = new LinkedHashMap<>();
+    private String versionId;
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
 
     public Product() {
     }

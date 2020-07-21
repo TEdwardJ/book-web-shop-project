@@ -50,7 +50,7 @@ public class JdbcProductDao {
             }
             return productsList;
         } catch (SQLException throwables) {
-            logger.error("DB Error occured: {}", throwables);
+            logger.error("DB Error occurred: {}", throwables);
             throw new DataException("Attempt to get all products from DB failed", throwables);
         }
     }
@@ -73,7 +73,7 @@ public class JdbcProductDao {
             logger.error("DB Error occured: {}", throwables);
             throw new DataException("Attempt to search product in DB failed", throwables);
         } catch (TemplateException | IOException e) {
-            logger.error("Query preparation error occured. See log above");
+            logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);
         }
     }
@@ -88,7 +88,6 @@ public class JdbcProductDao {
 
     public Product getOneById(int id) {
         try (Connection connection = dataSource.getConnection()) {
-
             Statement statement = connection.createStatement();
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("productId", id);
@@ -105,25 +104,29 @@ public class JdbcProductDao {
             logger.error("DB Error occured: {}", throwables);
             throw new DataException("Attempt to get one product by Id from DB failed", throwables);
         } catch (TemplateException | IOException e) {
-            logger.error("Query preparation error occured. See log above");
+            logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);
         }
     }
 
     public Product updateOne(Product product) {
+        String oldVersionId = Optional.ofNullable(product.getVersionId()).orElse("");
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
             Map<String, Object> parametersMap = new HashMap<>();
+            product.setVersionId(UUID.randomUUID().toString());
             parametersMap.put("product", product);
+            parametersMap.put("versionId", oldVersionId);
             String query = getPreparedQuery("updateOne", parametersMap);
             logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
-            connection.commit();
         } catch (SQLException throwables) {
             logger.error("DB Error occured: {}", throwables);
+            product.setVersionId(oldVersionId);
             throw new DataException("Attempt to update one product in DB failed", throwables);
         } catch (TemplateException | IOException e) {
-            logger.error("Query preparation error occured. See log above");
+            logger.error("Query preparation error occurred. See log above");
+            product.setVersionId(oldVersionId);
             throw new DataException(e);
         }
         return getOneById(product.getId());
@@ -142,12 +145,11 @@ public class JdbcProductDao {
             if (result.next()) {
                 newProductId = result.getInt(1);
             }
-            connection.commit();
         } catch (SQLException throwables) {
             logger.error("DB Error occured: {}", throwables);
             throw new DataException("Attempt to add one product into DB failed", throwables);
         } catch (TemplateException | IOException e) {
-            logger.error("Query preparation error occured. See log above");
+            logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);
         }
         return getOneById(newProductId);
