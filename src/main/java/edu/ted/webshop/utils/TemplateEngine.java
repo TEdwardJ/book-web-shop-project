@@ -34,19 +34,14 @@ public class TemplateEngine {
     public void init() {
         webConfiguration = new Configuration(Configuration.VERSION_2_3_30);
         webConfiguration.setClassForTemplateLoading(WebShopServer.class, baseTemplatePath);
-
-
         webConfiguration.setDefaultEncoding("UTF-8");
         webConfiguration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         webConfiguration.setLogTemplateExceptions(false);
         webConfiguration.setWrapUncheckedExceptions(true);
         webConfiguration.setFallbackOnNullLoopVariable(false);
-        Map<String, TemplateNumberFormatFactory> customNumberFormats
-                = new HashMap<String, TemplateNumberFormatFactory>();
+        Map<String, TemplateNumberFormatFactory> customNumberFormats = new HashMap<String, TemplateNumberFormatFactory>();
         customNumberFormats.put("price", new AliasTemplateNumberFormatFactory("#,##0.00 ¤;; currencyCode=UAH"));
         webConfiguration.setCustomNumberFormats(customNumberFormats);
-
-
     }
 
     public void writePage(String page, Writer writer, Map fieldsMap) {
@@ -54,10 +49,10 @@ public class TemplateEngine {
             Template template = webConfiguration.getTemplate(page);
             template.process(fieldsMap, writer);
         } catch (TemplateException e) {
-            logger.error("Template Engine Error occured: {}", e);
+            logger.error("Template Engine Error occurred: {}", e);
             logger.error("Template page: {}", page);
         } catch (IOException e) {
-            logger.error("Template Engine Error occured: {}", e);
+            logger.error("Template Engine Error occurred: {}", e);
             logger.error("Template page: {}", page);
         }
     }
@@ -68,11 +63,11 @@ public class TemplateEngine {
                     webConfiguration);
             template.process(fieldsMap, writer);
         } catch (TemplateException e) {
-            logger.error("Template Engine Error occured when SQL query was preparing: {}", e);
+            logger.error("Template Engine Error occurred when SQL query was preparing: {}", e);
             logger.error("Template string: {}", templateName);
             throw e;
         } catch (IOException e) {
-            logger.error("Template Engine Error occured when SQL query was preparing: {}", e);
+            logger.error("Template Engine Error occurred when SQL query was preparing: {}", e);
             logger.error("Template string: {}", templateName);
             throw e;
         }
