@@ -47,7 +47,7 @@ public class JdbcProductDaoTest {
     }
 
     @Test
-    public void givenKeyWordNonExistingInDB_whenSearchReturnsResults_thenCorrect() {
+    public void givenKeyWordNonExistingInDB_whenSearchReturnsEmptyResults_thenCorrect() {
         final String keyWord = "@##@#";
         final List<Product> allProducts = productDao.searchProducts(keyWord);
         assertTrue(allProducts.isEmpty());
@@ -78,7 +78,7 @@ public class JdbcProductDaoTest {
     }
 
     @Test
-    public void givenNonExistingId_whenReturned_thenCorrect() {
+    public void givenNonExistingId_whenNullReturned_thenCorrect() {
         int productId = 2228;
         assertNull(productDao.getOneById(productId));
     }
@@ -91,7 +91,7 @@ public class JdbcProductDaoTest {
         oldProduct.setDescription(newDescription);
         final BigDecimal newPrice = oldProduct.getPrice().add(new BigDecimal(100));
         oldProduct.setPrice(newPrice);
-        productDao.updateOne(oldProduct);
+        Product updatedProduct = productDao.updateOne(oldProduct);
         final Product product = productDao.getOneById(productId);
         assertNotNull(product);
         assertEquals(productId, product.getId());
@@ -99,6 +99,19 @@ public class JdbcProductDaoTest {
         assertEquals(newDescription, product.getDescription());
         assertEquals(newPrice, product.getPrice());
         assertFalse(product.getPictureUrl().isEmpty());
+        assertEquals(updatedProduct, product);
+    }
+
+    @Test
+    public void givenNonExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
+        int productId = 288;
+        final String productName = "Non Existing Product";
+        final String productDescription = "Non Existing Product Description";
+        final BigDecimal newPrice = new BigDecimal(105);
+        final Product oldProduct = new Product(productId, productName, productDescription, "", newPrice);
+        Product updatedProduct = productDao.updateOne(oldProduct);
+        final Product product = productDao.getOneById(productId);
+        assertNull(updatedProduct);
     }
 
     @Test
@@ -118,5 +131,6 @@ public class JdbcProductDaoTest {
         assertEquals(productDescription, product.getDescription());
         assertEquals(0, product.getPrice().compareTo(productPrice));
         assertEquals(pictureUrl, product.getPictureUrl());
+        assertEquals(insertedProduct, product);
     }
 }
