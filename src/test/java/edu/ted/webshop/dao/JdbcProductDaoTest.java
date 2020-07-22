@@ -105,7 +105,7 @@ public class JdbcProductDaoTest {
     public void givenExistingIdAndGetProductAndChangeAndUpdateButTheProductWasAlreadyUpdatedInParallel_whenGetByIdReturnsNonUpdated_thenCorrect() {
         int productId = 28;
         final Product productVersion0 = productDao.getOneById(productId);
-        final String product0Version = productVersion0.getVersionId();
+        final String version0 = productVersion0.getVersionId();
         final String newDescription = productVersion0.getDescription() + ". New Edition";
         productVersion0.setDescription(newDescription);
         final BigDecimal newPrice = productVersion0.getPrice().add(new BigDecimal(100));
@@ -113,7 +113,7 @@ public class JdbcProductDaoTest {
         final Product productVersion0UpdatedToVersion1 = productDao.updateOne(productVersion0);
         final Product productVersion1 = productDao.getOneById(productId);
         assertNotNull(productVersion1);
-        assertNotEquals(product0Version, productVersion1.getVersionId());
+        assertNotEquals(version0, productVersion1.getVersionId());
         assertEquals(productId, productVersion1.getId());
         assertEquals("The Bazaar of Bad Dreams Export", productVersion1.getName());
         assertEquals(newDescription, productVersion1.getDescription());
@@ -126,9 +126,9 @@ public class JdbcProductDaoTest {
         productVersion1.setVersionId(UUID.randomUUID().toString());
         productVersion1.setDescription(productVersion1.getDescription()+"!!!");
         final Product productVersion1NotUpdatedToVersion2 = productDao.updateOne(productVersion1);
-        assertNotEquals(productVersion1.getVersionId(), productVersion1NotUpdatedToVersion2.getVersionId());
-        assertEquals(product1Version, productVersion1NotUpdatedToVersion2.getVersionId());
-        assertNotEquals(productVersion1.getDescription(), productVersion1NotUpdatedToVersion2.getDescription());
+        assertEquals(productVersion1.getVersionId(), productVersion1NotUpdatedToVersion2.getVersionId());
+        assertNotEquals(product1Version, productVersion1NotUpdatedToVersion2.getVersionId());
+        assertEquals(productVersion1.getDescription(), productVersion1NotUpdatedToVersion2.getDescription());
     }
 
     @Test
@@ -140,7 +140,8 @@ public class JdbcProductDaoTest {
         final Product oldProduct = new Product(productId, productName, productDescription, "", newPrice);
         final Product updatedProduct = productDao.updateOne(oldProduct);
         final Product product = productDao.getOneById(productId);
-        assertNull(updatedProduct);
+        assertEquals(oldProduct, updatedProduct);
+        assertNull(product);
     }
 
     @Test

@@ -120,6 +120,11 @@ public class JdbcProductDao {
             String query = getPreparedQuery("updateOne", parametersMap);
             logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
+            final int updatedCount = statement.getUpdateCount();
+            if (updatedCount == 0) {
+                product.setVersionId(oldVersionId);
+            }
+            return product;
         } catch (SQLException throwables) {
             logger.error("DB Error occured: {}", throwables);
             product.setVersionId(oldVersionId);
@@ -129,7 +134,6 @@ public class JdbcProductDao {
             product.setVersionId(oldVersionId);
             throw new DataException(e);
         }
-        return getOneById(product.getId());
     }
 
     public Product insertOne(Product product) {
@@ -137,6 +141,7 @@ public class JdbcProductDao {
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
             Map<String, Object> parametersMap = new HashMap<>();
+            product.setVersionId(UUID.randomUUID().toString());
             parametersMap.put("product", product);
             String query = getPreparedQuery("insertNew", parametersMap);
             logger.debug("Prepared Query: {}", query);

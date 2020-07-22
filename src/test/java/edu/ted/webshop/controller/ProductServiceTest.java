@@ -18,15 +18,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ProductControllerTest {
+public class ProductServiceTest {
 
     private JdbcProductDao productDao;
-    private ProductController controller;
+    private ProductService controller;
 
     @BeforeEach
     public void init() {
         productDao = mock(JdbcProductDao.class);
-        controller = new ProductController(productDao);
+        controller = new ProductService(productDao);
     }
 
     @Test

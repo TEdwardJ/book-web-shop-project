@@ -1,6 +1,6 @@
 package edu.ted.webshop.servlets;
 
-import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.controller.ProductService;
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.dao.ShopDataSourceFactory;
 import edu.ted.webshop.utils.PropertyReader;
@@ -33,7 +33,7 @@ public class ConfigContextListener implements ServletContextListener {
         productDao.setQueries(queries);
 
         servletContext.setAttribute("productDAO", productDao);
-        servletContext.setAttribute("productController", new ProductController(productDao));
+        servletContext.setAttribute("productController", new ProductService(productDao));
     }
 
     @Override

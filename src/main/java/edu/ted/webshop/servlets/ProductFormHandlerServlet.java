@@ -1,6 +1,6 @@
 package edu.ted.webshop.servlets;
 
-import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.controller.ProductService;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.utils.TemplateEngine;
 
@@ -17,13 +17,13 @@ import java.util.*;
 public class ProductFormHandlerServlet extends HttpServlet {
 
     private TemplateEngine templateEngine;
-    private ProductController productController;
+    private ProductService productService;
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> map = new HashMap<>();
-        productController.processProductFormSubmission(req, map);
+        productService.processProductFormSubmission(req, map);
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -35,7 +35,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        Product productById = productController.getProductById(req, map);
+        Product productById = productService.getProductById(req, map);
 
         if (productById == null) {
             resp.sendRedirect("/notFound.html");
@@ -48,7 +48,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productController = (ProductController) this.getServletContext().getAttribute("productController");
+        productService = (ProductService) this.getServletContext().getAttribute("productController");
         templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }
