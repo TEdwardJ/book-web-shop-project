@@ -18,15 +18,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ProductControllerTest {
+public class ProductServiceTest {
 
     private JdbcProductDao productDao;
-    private ProductController controller;
+    private ProductService controller;
 
     @BeforeEach
     public void init() {
         productDao = mock(JdbcProductDao.class);
-        controller = new ProductController(productDao);
+        controller = new ProductService(productDao);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ProductControllerTest {
     @Test
     public void givenRequestAfterFormSubmission_whenGetProductDTOFromRequest_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
-        when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
+        when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("aaaa-bbbb-cccc");
         final ProductDTO productFromRequest = controller.getProductFromRequest(req);
         assertEquals("12", productFromRequest.getId());
         assertEquals("mockName", productFromRequest.getName());
@@ -167,8 +167,10 @@ public class ProductControllerTest {
     @Test
     public void givenRequestAfterFormSubmissionWithExistingProduct_whenUpdated_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
-        when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
-        when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
+        when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("bbbb-cccc-dddd");
+        final Product mockProduct = new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2"));
+        mockProduct.setVersionId("bbbb-cccc-dddd");
+        when(productDao.updateOne(any())).thenReturn(mockProduct);
 
         Map<String, Object> map = new HashMap<>();
         controller.processProductFormSubmission(req, map);
@@ -179,6 +181,7 @@ public class ProductControllerTest {
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
         assertEquals(0, returnedProduct.getPrice().compareTo(new BigDecimal("33.2")));
+        assertEquals("bbbb-cccc-dddd", returnedProduct.getVersionId());
     }
 
     @Test

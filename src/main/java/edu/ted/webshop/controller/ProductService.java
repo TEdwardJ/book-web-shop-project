@@ -10,11 +10,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ProductController {
+public class ProductService {
 
     private final JdbcProductDao productDao;
 
-    public ProductController(JdbcProductDao productDao) {
+    public ProductService(JdbcProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -73,7 +73,7 @@ public class ProductController {
         map.put("includeSearchForm", true);
     }
 
-    public void getAll(Map<String, Object> map){
+    public void getAll(Map<String, Object> map) {
         List<Product> productsList = productDao.getAll();
         map.put("productCount", productsList.size());
         map.put("productList", productsList);
@@ -97,7 +97,10 @@ public class ProductController {
         String productDescription = req.getParameter("description");
         String pictureUrl = req.getParameter("pictureUrl");
         String price = Optional.ofNullable(req.getParameter("price")).orElse("0");
-        return new ProductDTO(productId, productName, productDescription, pictureUrl, price);
+        String productVersion = req.getParameter("versionId");
+        final ProductDTO productDTO = new ProductDTO(productId, productName, productDescription, pictureUrl, price);
+        productDTO.setVersionId(productVersion);
+        return productDTO;
     }
 
     public void processProductFormSubmission(HttpServletRequest req, Map<String, Object> map) {
@@ -109,7 +112,14 @@ public class ProductController {
         } else {
             Product product = newProduct.getProduct();
             if (product.getId() != 0) {
-                map.put("product", productDao.updateOne(product));
+                String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
+                final Product updatedProduct = productDao.updateOne(product);
+                map.put("product", updatedProduct);
+                if (updatedProduct.getVersionId().equals(oldProductVersion)) {
+                    validationWarningList.add("The product you try to save was updated by someone else. Please <a href='"+req.getRequestURI()+"'>refresh</a> and try again");
+                    map.put("validationWarning", validationWarningList);
+                }
+
             } else {
                 map.put("product", productDao.insertOne(product));
             }

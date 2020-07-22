@@ -7,18 +7,22 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class ProductRowMapper {
     private static Logger logger = LoggerFactory.getLogger(ProductRowMapper.class);
 
     public static Product map(ResultSet result) {
         try {
-            return new Product(result.getInt(1),
+            final Product product = new Product(result.getInt(1),
                     result.getString(2),
                     result.getString(3),
                     result.getString(4),
                     result.getBigDecimal(5)
             );
+
+            product.setVersionId(Optional.ofNullable(result.getString(7)).orElse(""));
+            return product;
         } catch (SQLException throwables) {
             logger.error("Error occured: {}", throwables);
             throw new DataException("Attempt to create Product object based on DB data failed", throwables);

@@ -1,6 +1,6 @@
 package edu.ted.webshop.servlets;
 
-import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.controller.ProductService;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletConfig;
@@ -16,7 +16,7 @@ import java.util.Map;
 @WebServlet(name = "AllProductsServlet", urlPatterns = {"/product/all"})
 public class AllProductsServlet extends HttpServlet {
 
-    private  ProductController productController;
+    private ProductService productService;
 
     private TemplateEngine templateEngine;
 
@@ -25,7 +25,7 @@ public class AllProductsServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        productController.getAll(map);
+        productService.getAll(map);
 
         templateEngine.writePage("index.html", resp.getWriter(), map);
     }
@@ -33,7 +33,7 @@ public class AllProductsServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productController = (ProductController) this.getServletContext().getAttribute("productController");
+        productService = (ProductService) this.getServletContext().getAttribute("productController");
         templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }
