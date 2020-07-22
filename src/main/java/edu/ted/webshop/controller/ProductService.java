@@ -93,11 +93,11 @@ public class ProductService {
     ProductDTO getProductFromRequest(HttpServletRequest req) {
         String productId = req.getParameter("id");
 
-        String productVersion = req.getParameter("versionId");
         String productName = req.getParameter("name");
         String productDescription = req.getParameter("description");
         String pictureUrl = req.getParameter("pictureUrl");
         String price = Optional.ofNullable(req.getParameter("price")).orElse("0");
+        String productVersion = req.getParameter("versionId");
         final ProductDTO productDTO = new ProductDTO(productId, productName, productDescription, pictureUrl, price);
         productDTO.setVersionId(productVersion);
         return productDTO;
@@ -112,7 +112,7 @@ public class ProductService {
         } else {
             Product product = newProduct.getProduct();
             if (product.getId() != 0) {
-                String oldProductVersion = product.getVersionId();
+                String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
                 final Product updatedProduct = productDao.updateOne(product);
                 map.put("product", updatedProduct);
                 if (updatedProduct.getVersionId().equals(oldProductVersion)) {

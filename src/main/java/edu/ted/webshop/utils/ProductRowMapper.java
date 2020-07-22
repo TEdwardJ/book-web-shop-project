@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class ProductRowMapper {
     private static Logger logger = LoggerFactory.getLogger(ProductRowMapper.class);
@@ -19,7 +20,8 @@ public class ProductRowMapper {
                     result.getString(4),
                     result.getBigDecimal(5)
             );
-            product.setVersionId(result.getString(7));
+
+            product.setVersionId(Optional.ofNullable(result.getString(7)).orElse(""));
             return product;
         } catch (SQLException throwables) {
             logger.error("Error occured: {}", throwables);
