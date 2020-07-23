@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class ProductRowMapper {
-    private static Logger logger = LoggerFactory.getLogger(ProductRowMapper.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
 
     public static Product map(ResultSet result) {
         try {
@@ -24,7 +24,7 @@ public class ProductRowMapper {
             product.setVersionId(Optional.ofNullable(result.getString(7)).orElse(""));
             return product;
         } catch (SQLException throwables) {
-            logger.error("Error occured: {}", throwables);
+            LOGGER.error("Error occured: {}", throwables);
             throw new DataException("Attempt to create Product object based on DB data failed", throwables);
         }
     }

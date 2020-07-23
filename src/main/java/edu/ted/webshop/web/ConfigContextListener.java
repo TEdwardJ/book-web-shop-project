@@ -1,8 +1,9 @@
 package edu.ted.webshop.web;
 
+import edu.ted.webshop.dao.JdbcDataSourceFactory;
+import edu.ted.webshop.dao.JdbcPropertyResolver;
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.dao.JdbcProductDao;
-import edu.ted.webshop.dao.ShopDataSourceFactory;
 import edu.ted.webshop.utils.PropertyReader;
 import edu.ted.webshop.utils.TemplateEngine;
 import org.slf4j.Logger;
@@ -23,11 +24,12 @@ public class ConfigContextListener implements ServletContextListener {
         final TemplateEngine templateEngine = new TemplateEngine("/product/");
         templateEngine.init();
         servletContext.setAttribute("templateEngine", templateEngine);
-        Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
-        logger.info("dsProperties entries: {}", dataSourceProperties.size());
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         logger.info("Query entries: {}", queries.size());
-        final ShopDataSourceFactory dataSourceFactory = new ShopDataSourceFactory();
+        //final Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
+        final Properties dataSourceProperties = JdbcPropertyResolver.resolve();
+        logger.info("dsProperties entries: {}", dataSourceProperties.size());
+        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory();
         dataSourceFactory.setDataSourceProperties(dataSourceProperties);
         final JdbcProductDao productDao = new JdbcProductDao(dataSourceFactory, templateEngine);
         productDao.setQueries(queries);

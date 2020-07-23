@@ -11,7 +11,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ShopDataSourceFactoryTest {
+class JdbcDataSourceFactoryTest {
 
     private DataSourceFactory factory;
 
@@ -20,14 +20,14 @@ class ShopDataSourceFactoryTest {
     @BeforeEach
     public void init() {
         dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
-        factory = new ShopDataSourceFactory();
-        ((ShopDataSourceFactory) factory).setDataSourceProperties(dataSourceProperties);
+        factory = new JdbcDataSourceFactory();
+        ((JdbcDataSourceFactory) factory).setDataSourceProperties(dataSourceProperties);
     }
 
     @Test
 
     public void givenDataSourceFactory_whenGetPropertiesAndItSet_thenCorrect(){
-        assertEquals(dataSourceProperties, ((ShopDataSourceFactory) factory).getDataSourceProperties());
+        assertEquals(dataSourceProperties, ((JdbcDataSourceFactory) factory).getDataSourceProperties());
     }
 
     @Test

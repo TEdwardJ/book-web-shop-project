@@ -74,6 +74,18 @@ public class ServletsITest {
         assertThat("Response Content", responseBody, containsString("General Books List"));
     }
 
+
+    @Test
+    public void searchProductWithNoKeyWordDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
+        URI uri = new URI("http://127.0.0.1:8081/search?");
+        ContentResponse response = client.newRequest(uri)
+                .method(HttpMethod.GET)
+                .send();
+        // test response content
+        assertThat("HTTP Response Status", response.getStatus(), is(HttpStatus.OK_200));
+        assertThat("HTTP Redirect to home page", response.getRequest().getPath(), is("/"));
+    }
+
     @Test
     public void getProductDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
         URI uri = new URI("http://127.0.0.1:8081/product/28");
