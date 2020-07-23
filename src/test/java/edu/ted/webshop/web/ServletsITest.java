@@ -74,7 +74,6 @@ public class ServletsITest {
         assertThat("Response Content", responseBody, containsString("General Books List"));
     }
 
-
     @Test
     public void searchProductWithNoKeyWordDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
         URI uri = new URI("http://127.0.0.1:8081/search?");
@@ -113,6 +112,22 @@ public class ServletsITest {
         String responseBody = response.getContentAsString();
         assertThat("Response Content: Form", responseBody, containsString("<form method=\"post\""));
         assertThat("Response Content: productId", responseBody, containsString("<INPUT type=\"hidden\" name=\"id\" value=\"28\"/>"));
+    }
+
+    @Test
+    public void addProductDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
+        URI uri = new URI("http://127.0.0.1:8081/product/add");
+        ContentResponse response = client.newRequest(uri)
+                .method(HttpMethod.GET)
+                .send();
+        assertThat("HTTP Response Status", response.getStatus(), is(HttpStatus.OK_200));
+
+        // test response content
+        assertThat("Content Type", response.getMediaType(), is("text/html"));
+        String responseBody = response.getContentAsString();
+        assertThat("Response Content: Form", responseBody, containsString("<form method=\"post\""));
+        assertThat("Response Content: Form", responseBody, containsString("action=\"/product/add\""));
+        assertThat("Response Content: productId", responseBody, containsString("<INPUT type=\"hidden\" name=\"id\" value=\"0\"/>"));
     }
 
     @Test

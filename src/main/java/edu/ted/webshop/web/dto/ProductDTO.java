@@ -1,4 +1,6 @@
-package edu.ted.webshop.entity;
+package edu.ted.webshop.web.dto;
+
+import edu.ted.webshop.entity.Product;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -70,7 +72,7 @@ public class ProductDTO {
         this.price = price;
     }
     public Product getProduct(){
-        BigDecimal productPrice = new BigDecimal(price/*.replace(",", ".")*/);
+        BigDecimal productPrice = new BigDecimal(price);
         final Product product = new Product(Integer.parseInt(id), name, description, pictureUrl, productPrice);
 
         product.setVersionId(Optional.ofNullable(getVersionId()).orElse(""));

@@ -13,11 +13,6 @@
             crossorigin="anonymous"></script>
 </head>
 <#include "navbar.html">
-<#if product.id == 0>
-    <#assign formAction = '/product/add'>
-<#else>
-    <#assign formAction = '/product/edit/'+product.id>
-</#if>
     <#if validationWarning??>
 <div class="alert alert-warning" role="alert">
     <ul>
@@ -51,7 +46,7 @@
     <DIV class="form-group row">
         <label for="productPriceField" class="col-sm-2 col-form-label">Product Price</label>
         <div class="col-sm-10">
-            <INPUT type="text" id="productPriceField" name="price" value="${product.price?c}"/>
+            <INPUT type="text" id="productPriceField" name="price" value="${product.price}"/>
         </div>
     </DIV>
     <div class="form-group row">

@@ -2,7 +2,7 @@ package edu.ted.webshop.service;
 
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
-import edu.ted.webshop.entity.ProductDTO;
+import edu.ted.webshop.web.dto.ProductDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -56,6 +56,7 @@ public class ProductService {
             newProduct = new Product();
         }
         map.put("product", newProduct);
+        map.put("formAction", getFormAction(newProduct));
         return newProduct;
     }
 
@@ -103,25 +104,44 @@ public class ProductService {
         return productDTO;
     }
 
+    String getFormAction(ProductDTO product) {
+        if (product.getId().equals("0")) {
+            return "/product/add";
+        } else {
+            return "/product/edit/" + product.getId();
+        }
+    }
+
+    String getFormAction(Product product) {
+        if (product.getId() == 0) {
+            return "/product/add";
+        } else {
+            return "/product/edit/" + product.getId();
+        }
+    }
+
     public void processProductFormSubmission(HttpServletRequest req, Map<String, Object> map) {
         ProductDTO newProduct = getProductFromRequest(req);
         List<String> validationWarningList = validateProduct(newProduct);
         if (!validationWarningList.isEmpty()) {
             map.put("validationWarning", validationWarningList);
             map.put("product", newProduct);
+            map.put("formAction", getFormAction(newProduct));
         } else {
             Product product = newProduct.getProduct();
             if (product.getId() != 0) {
+                map.put("formAction", getFormAction(product));
                 String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
                 final Product updatedProduct = productDao.updateOne(product);
                 map.put("product", updatedProduct);
                 if (updatedProduct.getVersionId().equals(oldProductVersion)) {
-                    validationWarningList.add("The product you try to save was updated by someone else. Please <a href='"+req.getRequestURI()+"'>refresh</a> and try again");
+                    validationWarningList.add("The product you try to save was updated by someone else. Please <a href='" + req.getRequestURI() + "'>refresh</a> and try again");
                     map.put("validationWarning", validationWarningList);
                 }
-
             } else {
-                map.put("product", productDao.insertOne(product));
+                final Product insertedProduct = productDao.insertOne(product);
+                map.put("product", insertedProduct);
+                map.put("formAction", getFormAction(insertedProduct));
             }
         }
     }
