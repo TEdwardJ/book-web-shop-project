@@ -1,6 +1,6 @@
 package edu.ted.webshop.server;
 
-import edu.ted.webshop.servlets.*;
+import edu.ted.webshop.web.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;

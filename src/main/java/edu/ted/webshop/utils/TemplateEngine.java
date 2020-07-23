@@ -1,6 +1,5 @@
 package edu.ted.webshop.utils;
 
-import edu.ted.webshop.server.WebShopServer;
 import freemarker.core.AliasTemplateNumberFormatFactory;
 import freemarker.core.TemplateNumberFormatFactory;
 import freemarker.template.Configuration;
@@ -33,7 +32,7 @@ public class TemplateEngine {
 
     public void init() {
         webConfiguration = new Configuration(Configuration.VERSION_2_3_30);
-        webConfiguration.setClassForTemplateLoading(WebShopServer.class, baseTemplatePath);
+        webConfiguration.setClassForTemplateLoading(this.getClass(), baseTemplatePath);
         webConfiguration.setDefaultEncoding("UTF-8");
         webConfiguration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         webConfiguration.setLogTemplateExceptions(false);

@@ -1,4 +1,4 @@
-package edu.ted.webshop.servlets;
+package edu.ted.webshop.web;
 
 import org.eclipse.jetty.server.Request;
 import org.slf4j.Logger;

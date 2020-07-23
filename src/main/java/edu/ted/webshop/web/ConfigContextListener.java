@@ -1,4 +1,4 @@
-package edu.ted.webshop.servlets;
+package edu.ted.webshop.web;
 
 import edu.ted.webshop.controller.ProductController;
 import edu.ted.webshop.dao.JdbcProductDao;

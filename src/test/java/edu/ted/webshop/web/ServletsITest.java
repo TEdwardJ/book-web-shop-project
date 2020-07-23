@@ -1,10 +1,11 @@
-package edu.ted.webshop.servlets;
+package edu.ted.webshop.web;
 
-import edu.ted.webshop.server.WebShopServer;
+import edu.ted.webshop.Starter;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.eclipse.jetty.server.Server;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,24 +22,25 @@ import static org.hamcrest.core.Is.is;
 
 public class ServletsITest {
 
-    private static WebShopServer server;
+    private static Server server;
 
     public static HttpClient client;
 
     @BeforeAll
     public static void startServer() throws Exception
     {
-        server = new WebShopServer();
+        /*server = new WebShopServer();
         server.init();
-        server.start();
+        server.start();*/
+        Starter.main(new String[]{});
+        server = Starter.getServer();
 
         client = new HttpClient();
         client.start();
     }
 
     @AfterAll
-    public static void stopServer() throws Exception
-    {
+    public static void stopServer() throws Exception {
         server.stop();
         client.stop();
     }
