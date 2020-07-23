@@ -1,6 +1,6 @@
 package edu.ted.webshop.web;
 
-import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.utils.TemplateEngine;
 
 import javax.servlet.ServletConfig;
@@ -16,7 +16,7 @@ import java.util.*;
 public class SearchServlet extends HttpServlet {
 
     private TemplateEngine templateEngine;
-    private ProductController productController;
+    private ProductService productService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -24,7 +24,7 @@ public class SearchServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
 
-        productController.searchProductByKeyWord(req, map);
+        productService.searchProductByKeyWord(req, map);
         if (!map.containsKey("keyWord")) {
             resp.sendRedirect("/");
         }
@@ -34,7 +34,7 @@ public class SearchServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productController = (ProductController) this.getServletContext().getAttribute("productController");
+        productService = (ProductService) this.getServletContext().getAttribute("productController");
         templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

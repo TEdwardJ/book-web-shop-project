@@ -1,6 +1,6 @@
 package edu.ted.webshop.web;
 
-import edu.ted.webshop.controller.ProductController;
+import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.utils.TemplateEngine;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @WebServlet(name = "GetProductServlet", urlPatterns = "/product/*")
 public class GetProductServlet extends HttpServlet {
 
-    private ProductController productController;
+    private ProductService productService;
 
     private TemplateEngine templateEngine;
 
@@ -26,7 +26,7 @@ public class GetProductServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        final Product productById = productController.getProductById(req, map);
+        final Product productById = productService.getProductById(req, map);
 
         if (productById == null) {
             resp.sendRedirect("/notFound.html");
@@ -39,7 +39,7 @@ public class GetProductServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productController = (ProductController) this.getServletContext().getAttribute("productController");
+        productService = (ProductService) this.getServletContext().getAttribute("productController");
         templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }
