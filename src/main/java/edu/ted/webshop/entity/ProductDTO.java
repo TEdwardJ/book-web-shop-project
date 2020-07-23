@@ -60,7 +60,7 @@ public class ProductDTO {
         this.price = price;
     }
     public Product getProduct(){
-        BigDecimal productPrice = new BigDecimal(price.replace(",", "."));
+        BigDecimal productPrice = new BigDecimal(price/*.replace(",", ".")*/);
         return new Product(Integer.parseInt(id), name, description, pictureUrl, productPrice);
     }
 }
