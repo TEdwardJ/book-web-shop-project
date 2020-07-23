@@ -57,7 +57,7 @@ public class TemplateEngine {
         }
     }
 
-    public void writeString(String templateName, String templateStr, Writer writer, Map fieldsMap) throws TemplateException, IOException {
+    public void writeString(String templateName, String templateStr, Writer writer, Map<String, Object> fieldsMap) throws TemplateException, IOException {
         try {
             Template template = new Template(templateName, new StringReader(templateStr),
                     webConfiguration);
