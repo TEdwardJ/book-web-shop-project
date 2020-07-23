@@ -50,7 +50,7 @@ public class JdbcProductDao {
             }
             return productsList;
         } catch (SQLException throwables) {
-            logger.error("DB Error occurred: {}", throwables);
+            logger.error("DB Error occurred:", throwables);
             throw new DataException("Attempt to get all products from DB failed", throwables);
         }
     }
@@ -70,7 +70,7 @@ public class JdbcProductDao {
             }
             return productsList;
         } catch (SQLException throwables) {
-            logger.error("DB Error occured: {}", throwables);
+            logger.error("DB Error occurred:", throwables);
             throw new DataException("Attempt to search product in DB failed", throwables);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
@@ -101,7 +101,7 @@ public class JdbcProductDao {
             }
             return null;
         } catch (SQLException throwables) {
-            logger.error("DB Error occured: {}", throwables);
+            logger.error("DB Error occurred:", throwables);
             throw new DataException("Attempt to get one product by Id from DB failed", throwables);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
@@ -126,7 +126,7 @@ public class JdbcProductDao {
             }
             return product;
         } catch (SQLException throwables) {
-            logger.error("DB Error occured: {}", throwables);
+            logger.error("DB Error occurred:", throwables);
             product.setVersionId(oldVersionId);
             throw new DataException("Attempt to update one product in DB failed", throwables);
         } catch (TemplateException | IOException e) {
@@ -151,7 +151,7 @@ public class JdbcProductDao {
                 newProductId = result.getInt(1);
             }
         } catch (SQLException throwables) {
-            logger.error("DB Error occured: {}", throwables);
+            logger.error("DB Error occurred:", throwables);
             throw new DataException("Attempt to add one product into DB failed", throwables);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
