@@ -6,6 +6,7 @@ import edu.ted.webshop.utils.TemplateEngine;
 import freemarker.template.TemplateException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JdbcProductDaoTest {
 
     private static JdbcProductDao productDao;
+
+    @Mock
+    private static JdbcProductDao mockProductDao;
 
     @BeforeAll
     public static void init() {
@@ -29,6 +33,13 @@ public class JdbcProductDaoTest {
 
     @Test
     public void whenGetAllReturnsList_thenCorrect() {
+        final List<Product> allProducts = productDao.getAll();
+        assertFalse(allProducts.isEmpty());
+    }
+
+    @Test
+    public void whenGetAllAndSomeException_when_DataException_thenCorrect() {
+        //when()
         final List<Product> allProducts = productDao.getAll();
         assertFalse(allProducts.isEmpty());
     }

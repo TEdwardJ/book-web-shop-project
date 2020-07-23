@@ -1,6 +1,6 @@
 package edu.ted.webshop.servlets;
 
-import edu.ted.webshop.controller.ProductService;
+import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.dao.ShopDataSourceFactory;
 import edu.ted.webshop.utils.PropertyReader;
