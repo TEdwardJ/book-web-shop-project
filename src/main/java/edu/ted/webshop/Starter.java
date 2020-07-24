@@ -1,5 +1,6 @@
 package edu.ted.webshop;
 
+import edu.ted.webshop.utils.ProductRowMapper;
 import edu.ted.webshop.web.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -8,12 +9,17 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 import java.util.Optional;
 
 public class Starter {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
+
     private static Server server;
 
     public static Server getServer() {
@@ -25,6 +31,7 @@ public class Starter {
         server = new Server();
         init();
         server.start();
+        LOGGER.info("Server started");
     }
 
     public static void init() {

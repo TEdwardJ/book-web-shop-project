@@ -61,7 +61,7 @@ public class JdbcProductDao {
             Map<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("keyWord", keyWord);
             Statement statement = connection.createStatement();
-            String query = getPreparedQuery("searchAll", parametersMap);
+            String query = getPreparedQuery("findAll", parametersMap);
             logger.debug("Prepared Query: {}", query);
             boolean executed = statement.execute(query);
             ResultSet results = statement.getResultSet();

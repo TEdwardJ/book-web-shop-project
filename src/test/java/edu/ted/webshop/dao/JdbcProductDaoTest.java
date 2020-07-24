@@ -24,8 +24,7 @@ public class JdbcProductDaoTest {
     @BeforeAll
     public static void init() {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
-        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory();
-        dataSourceFactory.setDataSourceProperties(dataSourceProperties);
+        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
         productDao = new JdbcProductDao(dataSourceFactory, new TemplateEngine("/product/"));
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         productDao.setQueries(queries);
@@ -67,9 +66,9 @@ public class JdbcProductDaoTest {
         final String keyWord = "iPhone";
         parametersMap.put("keyWord", keyWord);
 
-        String queryName = "searchAll";
+        String queryName = "findAll";
         String preparedQuery = productDao.getPreparedQuery(queryName, parametersMap);
-        assertTrue(preparedQuery.contains("SELECT * FROM"));
+        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM"));
         assertTrue(preparedQuery.contains("'"+keyWord+"'"));
     }
 

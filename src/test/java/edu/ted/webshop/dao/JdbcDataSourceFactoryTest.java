@@ -20,15 +20,9 @@ class JdbcDataSourceFactoryTest {
     @BeforeEach
     public void init() {
         dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
-        factory = new JdbcDataSourceFactory();
-        ((JdbcDataSourceFactory) factory).setDataSourceProperties(dataSourceProperties);
+        factory = new JdbcDataSourceFactory(dataSourceProperties);
     }
 
-    @Test
-
-    public void givenDataSourceFactory_whenGetPropertiesAndItSet_thenCorrect(){
-        assertEquals(dataSourceProperties, ((JdbcDataSourceFactory) factory).getDataSourceProperties());
-    }
 
     @Test
     void givenDataSourceFactory_thenGetConnection_whenNoException_thenCorrect() throws SQLException {

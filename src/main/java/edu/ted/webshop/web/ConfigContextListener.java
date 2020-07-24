@@ -26,11 +26,9 @@ public class ConfigContextListener implements ServletContextListener {
         servletContext.setAttribute("templateEngine", templateEngine);
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         logger.info("Query entries: {}", queries.size());
-        //final Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         final Properties dataSourceProperties = JdbcPropertyResolver.resolve();
         logger.info("dsProperties entries: {}", dataSourceProperties.size());
-        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory();
-        dataSourceFactory.setDataSourceProperties(dataSourceProperties);
+        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
         final JdbcProductDao productDao = new JdbcProductDao(dataSourceFactory, templateEngine);
         productDao.setQueries(queries);
 

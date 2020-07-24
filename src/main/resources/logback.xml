@@ -1,7 +1,9 @@
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <property name="defaultPattern"
+              value="%d{HH:mm:ss.SSS} [%thread] %X{requestId} %X{userId} %-5level %logger{36} - %msg%n" />
+    <appender name="standardOutput" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{requestId} %X{userId} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${defaultPattern}</pattern>
         </encoder>
     </appender>
     <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -13,13 +15,13 @@
             <fileNamePattern>log/archive/WebShopProject-%d{yyyy-MM-dd}.log.%i</fileNamePattern>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{requestId} %X{userId} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${defaultPattern}</pattern>
         </encoder>
     </appender>
 
     <root level="debug">
         <appender-ref ref="rollingFile" />
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="standardOutput" />
     </root>
 
 

@@ -113,7 +113,7 @@ public class ProductService {
     }
 
     String getFormAction(Product product) {
-        if (product.getId() == 0) {
+        if (product == null || product.getId() == 0) {
             return "/product/add";
         } else {
             return "/product/edit/" + product.getId();

@@ -30,10 +30,10 @@ public class JdbcPropertyResolver {
 
                 LOGGER.info("Heroku DB user: {}", username);
 
-                dataSourceProperties.setProperty("db.url", dbUrl);
-                dataSourceProperties.setProperty("db.driverCdb.lassName", "org.postgresql.Driver");
-                dataSourceProperties.setProperty("db.user", username);
-                dataSourceProperties.setProperty("db.password", password);
+                dataSourceProperties.setProperty("dataSource.Url", dbUrl);
+                dataSourceProperties.setProperty("dataSourceClassName", "org.postgresql.ds.PGSimpleDataSource");
+                dataSourceProperties.setProperty("dataSource.user", username);
+                dataSourceProperties.setProperty("dataSource.password", password);
             } catch (URISyntaxException e) {
                 LOGGER.error("Configuration of DataSource Failed:", e);
             }
