@@ -2,6 +2,7 @@ package edu.ted.webshop.service;
 
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
+import edu.ted.webshop.web.dto.ProductConverter;
 import edu.ted.webshop.web.dto.ProductDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -128,7 +129,7 @@ public class ProductService {
             map.put("product", newProduct);
             map.put("formAction", getFormAction(newProduct));
         } else {
-            Product product = newProduct.getProduct();
+            Product product = ProductConverter.toProduct(newProduct);
             if (product.getId() != 0) {
                 map.put("formAction", getFormAction(product));
                 String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");

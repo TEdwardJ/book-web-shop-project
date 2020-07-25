@@ -14,14 +14,6 @@ public class Product {
     private Map<String, String> properties = new LinkedHashMap<>();
     private String versionId;
 
-    public String getVersionId() {
-        return versionId;
-    }
-
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
-    }
-
     public Product() {
     }
 
@@ -81,6 +73,13 @@ public class Product {
         this.pictureUrl = pictureUrl;
     }
 
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
