@@ -27,10 +27,9 @@ public class JdbcProductDao {
     private DataSource dataSource;
     private Properties queries;
 
-    public JdbcProductDao(DataSourceFactory dataSourceFactory, TemplateEngine templateEngine) {
+    public JdbcProductDao(DataSource dataSource, TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
-        this.dataSourceFactory = dataSourceFactory;
-        dataSource = dataSourceFactory.getDataSource();
+        this.dataSource = dataSource;
     }
 
     public void setQueries(Properties queries) {
@@ -96,8 +95,7 @@ public class JdbcProductDao {
             boolean executed = statement.execute(query);
             ResultSet results = statement.getResultSet();
             if (results.next()) {
-                Product product = ProductRowMapper.map(results);
-                return product;
+                return ProductRowMapper.map(results);
             }
             return null;
         } catch (SQLException throwables) {

@@ -2,7 +2,6 @@ package edu.ted.webshop.dao;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +20,16 @@ public class JdbcDataSourceFactory implements DataSourceFactory {
     public JdbcDataSourceFactory(Properties dataSourceProperties) {
         this.dataSourceProperties = dataSourceProperties;
         config = new HikariConfig(dataSourceProperties);
+
     }
 
     public DataSource getDataSource() {
         final String user = dataSourceProperties.getProperty("db.user");
+        //config.setMaximumPoolSize();
         hikariDataSource = new HikariDataSource(config);
+        hikariDataSource.setMaximumPoolSize(4);
 
-        logger.info("Factory returns hikari DataSource: user {}, driver {}", user, hikariDataSource.getDataSourceClassName());
+        logger.info("Factory returns Hikari DataSource: user {}, driver {}", user, hikariDataSource.getDataSourceClassName());
         return hikariDataSource;//dataSource;
     }
 

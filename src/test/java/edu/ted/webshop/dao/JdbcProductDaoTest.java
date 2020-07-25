@@ -25,7 +25,7 @@ public class JdbcProductDaoTest {
     public static void init() {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
-        productDao = new JdbcProductDao(dataSourceFactory, new TemplateEngine("/product/"));
+        productDao = new JdbcProductDao(dataSourceFactory.getDataSource(), new TemplateEngine("/product/"));
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         productDao.setQueries(queries);
     }
