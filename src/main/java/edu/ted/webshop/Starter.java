@@ -1,7 +1,14 @@
 package edu.ted.webshop;
 
-import edu.ted.webshop.utils.ProductRowMapper;
-import edu.ted.webshop.web.*;
+import edu.ted.webshop.dao.JdbcDataSourceFactory;
+import edu.ted.webshop.dao.JdbcProductDao;
+import edu.ted.webshop.dao.JdbcPropertyResolver;
+import edu.ted.webshop.service.ProductService;
+import edu.ted.webshop.dao.mapper.ProductRowMapper;
+import edu.ted.webshop.utils.PropertyReader;
+import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.web.filter.LoggingFilter;
+import edu.ted.webshop.web.servlet.*;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -15,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Properties;
 
 public class Starter {
 
@@ -35,7 +43,7 @@ public class Starter {
     }
 
     public static void init() {
-        System.out.println(System.getenv("PORT")+" is the port");
+        System.out.println(System.getenv("PORT") + " is the port");
 
         Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
 
@@ -44,11 +52,23 @@ public class Starter {
         server.setConnectors(new Connector[]{connector});
 
         ServletContextHandler mainContextHandler = new ServletContextHandler();
-        mainContextHandler.addEventListener(new ConfigContextListener());
         mainContextHandler.setContextPath("/");
         mainContextHandler.setResourceBase("target/classes/static");
 
-        initServlets(mainContextHandler);
+
+        final FreeMarkerTemplateEngine templateEngine = new FreeMarkerTemplateEngine("/product/");
+        templateEngine.init();
+
+        //servletContext.setAttribute("templateEngine", templateEngine);
+        Properties queries = PropertyReader.readPropertyFile("query.properties");
+        LOGGER.info("Query entries: {}", queries.size());
+        Properties dataSourceProperties = JdbcPropertyResolver.resolve();
+        LOGGER.info("dsProperties entries: {}", dataSourceProperties.size());
+        JdbcProductDao productDao = new JdbcProductDao(new JdbcDataSourceFactory(dataSourceProperties).getDataSource(), templateEngine);
+        productDao.setQueries(queries);
+        ProductService productService = new ProductService(productDao);
+
+        initServlets(mainContextHandler, productService, templateEngine);
         initFilters(mainContextHandler);
 
         initErrorHandler(mainContextHandler);
@@ -56,26 +76,32 @@ public class Starter {
         server.setHandler(mainContextHandler);
     }
 
-
     private static void initFilters(ServletContextHandler mainContextHandler) {
         mainContextHandler.addFilter(LoggingFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
     }
 
-    private static void initServlets(ServletContextHandler mainContextHandler) {
-        mainContextHandler.addServlet(new ServletHolder(new AllProductsServlet()), "");
-        mainContextHandler.addServlet(GetProductServlet.class, "/product/*");
-        mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/edit/*");
-        mainContextHandler.addServlet(ProductFormHandlerServlet.class, "/product/add");
-        mainContextHandler.addServlet(ErrorHandlerServlet.class, "/errorHandler");
-        mainContextHandler.addServlet(SearchServlet.class, "/search");
-        mainContextHandler.addServlet(DefaultServlet.class, "/");
+    private static void initServlets(ServletContextHandler mainContextHandler, ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+        AllProductsServlet allProductsServlet = new AllProductsServlet(productService, templateEngine);
+        GetProductServlet getProductServlet = new GetProductServlet(productService, templateEngine);
+        ProductFormHandlerServlet productFormHandlerServlet = new ProductFormHandlerServlet(productService, templateEngine);
+        ErrorHandlerServlet errorHandlerServlet = new ErrorHandlerServlet();
+        SearchServlet searchProductServlet = new SearchServlet(productService, templateEngine);
+        DefaultServlet defaultServlet = new DefaultServlet();
+
+        mainContextHandler.addServlet(new ServletHolder(allProductsServlet), "");
+        mainContextHandler.addServlet(new ServletHolder(getProductServlet), "/product/*");
+        mainContextHandler.addServlet(new ServletHolder(productFormHandlerServlet), "/product/edit/*");
+        mainContextHandler.addServlet(new ServletHolder(productFormHandlerServlet), "/product/add");
+        mainContextHandler.addServlet(new ServletHolder(errorHandlerServlet), "/errorHandler");
+        mainContextHandler.addServlet(new ServletHolder(searchProductServlet), "/search");
+        mainContextHandler.addServlet(new ServletHolder(defaultServlet), "/");
     }
 
     private static void initErrorHandler(ServletContextHandler mainContextHandler) {
         ErrorPageErrorHandler handler404error = new ErrorPageErrorHandler();
         mainContextHandler.setErrorHandler(handler404error);
-        handler404error.addErrorPage(404,"/notFound.html");
-        handler404error.addErrorPage(Exception.class,"/errorHandler");
+        handler404error.addErrorPage(404, "/notFound.html");
+        handler404error.addErrorPage(Exception.class, "/errorHandler");
     }
 
 }

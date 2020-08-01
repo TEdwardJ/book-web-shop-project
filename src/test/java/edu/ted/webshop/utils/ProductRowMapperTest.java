@@ -1,5 +1,6 @@
 package edu.ted.webshop.utils;
 
+import edu.ted.webshop.dao.mapper.ProductRowMapper;
 import edu.ted.webshop.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

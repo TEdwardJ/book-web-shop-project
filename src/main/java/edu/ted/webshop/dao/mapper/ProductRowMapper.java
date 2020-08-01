@@ -1,4 +1,4 @@
-package edu.ted.webshop.utils;
+package edu.ted.webshop.dao.mapper;
 
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;

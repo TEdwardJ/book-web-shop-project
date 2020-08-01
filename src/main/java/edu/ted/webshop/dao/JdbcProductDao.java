@@ -2,8 +2,8 @@ package edu.ted.webshop.dao;
 
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
-import edu.ted.webshop.utils.ProductRowMapper;
-import edu.ted.webshop.utils.TemplateEngine;
+import edu.ted.webshop.dao.mapper.ProductRowMapper;
+import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +20,12 @@ import java.util.*;
 public class JdbcProductDao {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private DataSourceFactory dataSourceFactory;
-
-    private final TemplateEngine templateEngine;
+    private final FreeMarkerTemplateEngine templateEngine;
 
     private DataSource dataSource;
     private Properties queries;
 
-    public JdbcProductDao(DataSource dataSource, TemplateEngine templateEngine) {
+    public JdbcProductDao(DataSource dataSource, FreeMarkerTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
         this.dataSource = dataSource;
     }
@@ -48,9 +46,9 @@ public class JdbcProductDao {
                 productsList.add(ProductRowMapper.map(results));
             }
             return productsList;
-        } catch (SQLException throwables) {
-            logger.error("DB Error occurred:", throwables);
-            throw new DataException("Attempt to get all products from DB failed", throwables);
+        } catch (SQLException throwable) {
+            logger.error("DB Error occurred:", throwable);
+            throw new DataException("Attempt to get all products from DB failed", throwable);
         }
     }
 
@@ -68,9 +66,9 @@ public class JdbcProductDao {
                 productsList.add(ProductRowMapper.map(results));
             }
             return productsList;
-        } catch (SQLException throwables) {
-            logger.error("DB Error occurred:", throwables);
-            throw new DataException("Attempt to search product in DB failed", throwables);
+        } catch (SQLException throwable) {
+            logger.error("DB Error occurred:", throwable);
+            throw new DataException("Attempt to search product in DB failed", throwable);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);
@@ -80,8 +78,12 @@ public class JdbcProductDao {
     String getPreparedQuery(String queryName, Map<String, Object> parametersMap) throws IOException, TemplateException {
         String query = queries.getProperty(queryName);
         StringWriter writer = new StringWriter();
-
-        templateEngine.writeString(queryName, query, writer, parametersMap);
+        try {
+            templateEngine.writeString(queryName, query, writer, parametersMap);
+        } catch (Exception e) {
+            logger.error("Template Engine Error occurred when SQL query was preparing");
+            throw e;
+        }
         return writer.toString();
     }
 
@@ -98,9 +100,9 @@ public class JdbcProductDao {
                 return ProductRowMapper.map(results);
             }
             return null;
-        } catch (SQLException throwables) {
-            logger.error("DB Error occurred:", throwables);
-            throw new DataException("Attempt to get one product by Id from DB failed", throwables);
+        } catch (SQLException throwable) {
+            logger.error("DB Error occurred:", throwable);
+            throw new DataException("Attempt to get one product by Id from DB failed", throwable);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);
@@ -123,10 +125,10 @@ public class JdbcProductDao {
                 product.setVersionId(oldVersionId);
             }
             return product;
-        } catch (SQLException throwables) {
-            logger.error("DB Error occurred:", throwables);
+        } catch (SQLException throwable) {
+            logger.error("DB Error occurred:", throwable);
             product.setVersionId(oldVersionId);
-            throw new DataException("Attempt to update one product in DB failed", throwables);
+            throw new DataException("Attempt to update one product in DB failed", throwable);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
             product.setVersionId(oldVersionId);
@@ -148,9 +150,9 @@ public class JdbcProductDao {
             if (result.next()) {
                 newProductId = result.getInt(1);
             }
-        } catch (SQLException throwables) {
-            logger.error("DB Error occurred:", throwables);
-            throw new DataException("Attempt to add one product into DB failed", throwables);
+        } catch (SQLException throwable) {
+            logger.error("DB Error occurred:", throwable);
+            throw new DataException("Attempt to add one product into DB failed", throwable);
         } catch (TemplateException | IOException e) {
             logger.error("Query preparation error occurred. See log above");
             throw new DataException(e);

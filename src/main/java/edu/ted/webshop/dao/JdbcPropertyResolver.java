@@ -1,6 +1,6 @@
 package edu.ted.webshop.dao;
 
-import edu.ted.webshop.utils.ProductRowMapper;
+import edu.ted.webshop.dao.mapper.ProductRowMapper;
 import edu.ted.webshop.utils.PropertyReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,10 +1,9 @@
-package edu.ted.webshop.web;
+package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.entity.Product;
-import edu.ted.webshop.utils.TemplateEngine;
+import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,9 +15,13 @@ import java.util.*;
 @WebServlet(name = "editProductServlet", urlPatterns = {"/product/edit/*", "/product/add"})
 public class ProductFormHandlerServlet extends HttpServlet {
 
-    private TemplateEngine templateEngine;
     private ProductService productService;
+    private FreeMarkerTemplateEngine templateEngine;
 
+    public ProductFormHandlerServlet(ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+        this.productService = productService;
+        this.templateEngine = templateEngine;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,6 +41,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
         Product productById = productService.getProductById(req, map);
 
         if (productById == null) {
+            resp.setContentLength(0);
             resp.sendRedirect("/notFound.html");
             return;
         }
@@ -45,10 +49,4 @@ public class ProductFormHandlerServlet extends HttpServlet {
         templateEngine.writePage("productForm.html", resp.getWriter(), map);
     }
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        productService = (ProductService) this.getServletContext().getAttribute("productController");
-        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
-    }
 }

@@ -1,10 +1,9 @@
-package edu.ted.webshop.web;
+package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.entity.Product;
-import edu.ted.webshop.utils.TemplateEngine;
+import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +17,12 @@ import java.util.Map;
 public class GetProductServlet extends HttpServlet {
 
     private ProductService productService;
+    private FreeMarkerTemplateEngine templateEngine;
 
-    private TemplateEngine templateEngine;
+    public GetProductServlet(ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+        this.productService = productService;
+        this.templateEngine = templateEngine;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,17 +32,11 @@ public class GetProductServlet extends HttpServlet {
         final Product productById = productService.getProductById(req, map);
 
         if (productById == null) {
+            resp.setContentLength(0);
             resp.sendRedirect("/notFound.html");
             return;
         }
 
         templateEngine.writePage("product.html", resp.getWriter(), map);
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        productService = (ProductService) this.getServletContext().getAttribute("productController");
-        templateEngine = (TemplateEngine) this.getServletContext().getAttribute("templateEngine");
     }
 }

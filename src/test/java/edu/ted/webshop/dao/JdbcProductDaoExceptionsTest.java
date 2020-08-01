@@ -3,7 +3,7 @@ package edu.ted.webshop.dao;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
 import edu.ted.webshop.utils.PropertyReader;
-import edu.ted.webshop.utils.TemplateEngine;
+import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class JdbcProductDaoExceptionsTest {
     public static void init() {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
-        productDao = new JdbcProductDao(dataSourceFactory.getDataSource(), new TemplateEngine("/product/"));
+        productDao = new JdbcProductDao(dataSourceFactory.getDataSource(), new FreeMarkerTemplateEngine("/product/"));
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         productDao.setQueries(queries);
     }

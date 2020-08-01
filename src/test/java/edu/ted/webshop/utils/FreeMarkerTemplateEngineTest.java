@@ -12,15 +12,15 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TemplateEngineTest {
+class FreeMarkerTemplateEngineTest {
 
-    private static TemplateEngine TEMPLATE_ENGINE;
+    private static FreeMarkerTemplateEngine TEMPLATE_ENGINE;
 
     private static final String BASE_TEMPLATE_PATH = "/product/";
 
     @BeforeAll
     public static void init() {
-        TEMPLATE_ENGINE = new TemplateEngine(BASE_TEMPLATE_PATH);
+        TEMPLATE_ENGINE = new FreeMarkerTemplateEngine(BASE_TEMPLATE_PATH);
         TEMPLATE_ENGINE.init();
     }
 
