@@ -18,7 +18,7 @@
         <repository>
             <id>github</id>
             <name>GitHub TEdwardJ Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/tedwardj/custom-template-processor</url>
+            <url>https://maven.pkg.github.com/TEdwardJ/custom-template-processor</url>
         </repository>
     </repositories>
     <dependencies>
