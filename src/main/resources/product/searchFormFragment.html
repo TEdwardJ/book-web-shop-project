@@ -2,14 +2,12 @@
     <form method="GET" action="/search" class="form-inline">
         <div class="form-row">
             <label for="keyWordInput" class="col-form-label">Search:</label>
-            <input id="keyWordInput" type="text" name="keyWord" value="${keyWord!''}" placeholder="Type key word here"/>
+            <input id="keyWordInput" type="text" name="keyWord" value="${keyWord}" placeholder="Type key word here"/>
         </div>
 
         <div class="col-auto">
             <button class="btn btn-primary" value="">Find</button>
         </div>
     </form>
-    <#if keyWord??>
-        <a role="button" class="btn btn-primary" href="/">Reset</a>
-    </#if>
+    <a role="button" class="btn btn-primary" href="/">Reset</a>
 </div>

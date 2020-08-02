@@ -1,5 +1,6 @@
 package edu.ted.webshop;
 
+import edu.ted.templator.TemplateProcessor;
 import edu.ted.webshop.dao.JdbcDataSourceFactory;
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.dao.JdbcPropertyResolver;
@@ -7,6 +8,8 @@ import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.dao.mapper.ProductRowMapper;
 import edu.ted.webshop.utils.PropertyReader;
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.utils.TemplatorEngine;
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 import edu.ted.webshop.web.filter.LoggingFilter;
 import edu.ted.webshop.web.servlet.*;
 import org.eclipse.jetty.server.Connector;
@@ -29,6 +32,7 @@ public class Starter {
     private static Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
 
     private static Server server;
+    private static TemplateEngine templatorEngine;
 
     public static Server getServer() {
         return server;
@@ -59,7 +63,10 @@ public class Starter {
         final FreeMarkerTemplateEngine templateEngine = new FreeMarkerTemplateEngine("/product/");
         templateEngine.init();
 
-        //servletContext.setAttribute("templateEngine", templateEngine);
+        TemplateProcessor templateProcessor = new TemplateProcessor("product/");
+
+        templatorEngine = new TemplatorEngine(templateProcessor);
+
         Properties queries = PropertyReader.readPropertyFile("query.properties");
         LOGGER.info("Query entries: {}", queries.size());
         Properties dataSourceProperties = JdbcPropertyResolver.resolve();
@@ -80,12 +87,12 @@ public class Starter {
         mainContextHandler.addFilter(LoggingFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
     }
 
-    private static void initServlets(ServletContextHandler mainContextHandler, ProductService productService, FreeMarkerTemplateEngine templateEngine) {
-        AllProductsServlet allProductsServlet = new AllProductsServlet(productService, templateEngine);
-        GetProductServlet getProductServlet = new GetProductServlet(productService, templateEngine);
+    private static void initServlets(ServletContextHandler mainContextHandler, ProductService productService, TemplateEngine templateEngine) {
+        AllProductsServlet allProductsServlet = new AllProductsServlet(productService, templatorEngine);
+        GetProductServlet getProductServlet = new GetProductServlet(productService, templatorEngine);
         ProductFormHandlerServlet productFormHandlerServlet = new ProductFormHandlerServlet(productService, templateEngine);
-        ErrorHandlerServlet errorHandlerServlet = new ErrorHandlerServlet();
-        SearchServlet searchProductServlet = new SearchServlet(productService, templateEngine);
+        ErrorHandlerServlet errorHandlerServlet = new ErrorHandlerServlet(templateEngine);
+        SearchServlet searchProductServlet = new SearchServlet(productService, templatorEngine);
         DefaultServlet defaultServlet = new DefaultServlet();
 
         mainContextHandler.addServlet(new ServletHolder(allProductsServlet), "");

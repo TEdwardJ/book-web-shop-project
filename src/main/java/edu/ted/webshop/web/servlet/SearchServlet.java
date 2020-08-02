@@ -2,6 +2,7 @@ package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,9 +15,9 @@ import java.util.*;
 public class SearchServlet extends HttpServlet {
 
     private ProductService productService;
-    private FreeMarkerTemplateEngine templateEngine;
+    private TemplateEngine templateEngine;
 
-    public SearchServlet(ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+    public SearchServlet(ProductService productService, TemplateEngine templateEngine) {
         this.productService = productService;
         this.templateEngine = templateEngine;
     }

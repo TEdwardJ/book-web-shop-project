@@ -58,7 +58,7 @@ class FreeMarkerTemplateEngineTest {
     }
 
     @Test
-    void givenStringWithTokens_whenReturnsSubstituted_thenCorrect() throws IOException, TemplateException {
+    void givenStringWithTokens_whenReturnsSubstituted_thenCorrect() throws Exception {
         String query = "UPDATE schema.table set column1 = '${column1}', column2 = '${column2}' WHERE id_column = ${id}";
         String preparedQuery = "UPDATE schema.table set column1 = 'value1', column2 = 'value2' WHERE id_column = 4488";
         Map<String, Object> parametersMap = new HashMap<>();

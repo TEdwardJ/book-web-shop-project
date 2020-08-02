@@ -1,21 +1,20 @@
 package edu.ted.webshop.utils;
 
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 import freemarker.core.AliasTemplateNumberFormatFactory;
 import freemarker.core.TemplateNumberFormatFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FreeMarkerTemplateEngine {
+public class FreeMarkerTemplateEngine implements TemplateEngine {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final String baseTemplatePath;
@@ -53,7 +52,7 @@ public class FreeMarkerTemplateEngine {
         }
     }
 
-    public void writeString(String templateName, String templateStr, Writer writer, Map<String, Object> fieldsMap) throws TemplateException, IOException {
+    public void writeString(String templateName, String templateStr, Writer writer, Map<String, Object> fieldsMap) throws Exception {
         try {
             Template template = new Template(templateName, new StringReader(templateStr),
                     configuration);

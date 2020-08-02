@@ -2,6 +2,7 @@ package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +17,9 @@ import java.util.Map;
 public class AllProductsServlet extends HttpServlet {
 
     private ProductService productService;
-    private FreeMarkerTemplateEngine templateEngine;
+    private TemplateEngine templateEngine;
 
-    public AllProductsServlet(ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+    public AllProductsServlet(ProductService productService,TemplateEngine templateEngine) {
         this.productService = productService;
         this.templateEngine = templateEngine;
     }
@@ -29,7 +30,7 @@ public class AllProductsServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
         productService.getAll(map);
-
+        map.put("keyWord", "");
         templateEngine.writePage("index.html", resp.getWriter(), map);
     }
 

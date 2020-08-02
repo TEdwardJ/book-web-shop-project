@@ -1,6 +1,7 @@
 package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -16,8 +17,11 @@ import java.util.*;
 @WebServlet("/errorHandler")
 public class ErrorHandlerServlet extends HttpServlet {
 
-    private FreeMarkerTemplateEngine templateEngine;
+    private TemplateEngine templateEngine;
 
+    public ErrorHandlerServlet(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,9 +38,4 @@ public class ErrorHandlerServlet extends HttpServlet {
         templateEngine.writePage("errorHandler.html", resp.getWriter(), map);
     }
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        templateEngine = (FreeMarkerTemplateEngine) this.getServletContext().getAttribute("templateEngine");
-    }
 }

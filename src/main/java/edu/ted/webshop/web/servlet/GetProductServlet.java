@@ -3,6 +3,7 @@ package edu.ted.webshop.web.servlet;
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
+import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,9 +18,9 @@ import java.util.Map;
 public class GetProductServlet extends HttpServlet {
 
     private ProductService productService;
-    private FreeMarkerTemplateEngine templateEngine;
+    private TemplateEngine templateEngine;
 
-    public GetProductServlet(ProductService productService, FreeMarkerTemplateEngine templateEngine) {
+    public GetProductServlet(ProductService productService, TemplateEngine templateEngine) {
         this.productService = productService;
         this.templateEngine = templateEngine;
     }
