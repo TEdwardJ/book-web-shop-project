@@ -11,7 +11,7 @@
         <append>true</append>
         <rollingPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <totalSizeCap>50Mb</totalSizeCap>
-            <maxFileSize>5Mb</maxFileSize>
+            <maxFileSize>3Mb</maxFileSize>
             <fileNamePattern>log/archive/WebShopProject-%d{yyyy-MM-dd}.log.%i</fileNamePattern>
         </rollingPolicy>
         <encoder>
