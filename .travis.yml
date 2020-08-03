@@ -12,4 +12,4 @@ after_success:
   - bash <(curl -s https://codecov.io/bash) -t 1c618d55-c886-4a3b-9ef5-5738572f98cb
 
 install:
-  - "mvn install -Dmaven.javadoc.skip=true -B -V"
+  - "mvn install -s settings.xml -Dmaven.javadoc.skip=true -B -V"

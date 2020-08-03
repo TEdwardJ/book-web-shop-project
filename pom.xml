@@ -8,7 +8,6 @@
     <artifactId>web-shop-project</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
     <properties>
         <jetty.version>9.4.30.v20200611</jetty.version>
         <surefire.version>3.0.0-M5</surefire.version>
