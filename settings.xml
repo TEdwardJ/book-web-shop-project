@@ -5,7 +5,7 @@
         <server>
             <id>github</id>
             <username>TEdwardJ</username>
-            <password>${env.CI_USER_TOKEN}</password>
+            <password>${env.GIT_USER_TOKEN}</password>
         </server>
     </servers>
 </settings>
