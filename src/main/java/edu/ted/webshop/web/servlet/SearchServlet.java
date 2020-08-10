@@ -31,6 +31,7 @@ public class SearchServlet extends HttpServlet {
         productService.searchProductByKeyWord(req, map);
         if (!map.containsKey("keyWord")) {
             resp.sendRedirect("/");
+            return;
         }
         templateEngine.writePage("index.html", resp.getWriter(), map);
     }
