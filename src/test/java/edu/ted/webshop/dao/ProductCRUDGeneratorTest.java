@@ -1,5 +1,6 @@
 package edu.ted.webshop.dao;
 
+import edu.ted.webshop.entity.Product;
 import freemarker.template.TemplateException;
 import org.junit.jupiter.api.Test;
 
@@ -23,5 +24,12 @@ class ProductCRUDGeneratorTest {
     public void getSelectAllQueryTest() {
         String preparedQuery = ProductCRUDGenerator.getSelectAllQuery();
         assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM"));
+    }
+
+    @Test
+    public void givenTextWithQuote_whenReturnsQuoteReplaced_thenCorrect() {
+        String initialLine ="some text ' and some text again";
+        String processedLine = ProductCRUDGenerator.quoteReplace(initialLine);
+        assertEquals("some text '' and some text again", processedLine);
     }
 }
