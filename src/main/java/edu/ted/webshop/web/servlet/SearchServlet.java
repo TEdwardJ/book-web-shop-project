@@ -1,7 +1,6 @@
 package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
-import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +13,8 @@ import java.util.*;
 @WebServlet(name = "SearchProductServlet", urlPatterns = "/search")
 public class SearchServlet extends HttpServlet {
 
-    private ProductService productService;
-    private TemplateEngine templateEngine;
+    private final ProductService productService;
+    private final TemplateEngine templateEngine;
 
     public SearchServlet(ProductService productService, TemplateEngine templateEngine) {
         this.productService = productService;
@@ -30,6 +29,7 @@ public class SearchServlet extends HttpServlet {
 
         productService.searchProductByKeyWord(req, map);
         if (!map.containsKey("keyWord")) {
+            resp.setContentLength(0);
             resp.sendRedirect("/");
             return;
         }

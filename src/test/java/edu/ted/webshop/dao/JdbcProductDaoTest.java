@@ -18,16 +18,12 @@ public class JdbcProductDaoTest {
 
     private static JdbcProductDao productDao;
 
-    @Mock
-    private static JdbcProductDao mockProductDao;
-
     @BeforeAll
     public static void init() {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
         final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
-        productDao = new JdbcProductDao(dataSourceFactory.getDataSource(), new FreeMarkerTemplateEngine("/product/"));
+        productDao = new JdbcProductDao(dataSourceFactory.getDataSource());
         Properties queries = PropertyReader.readPropertyFile("query.properties");
-        productDao.setQueries(queries);
     }
 
     @Test
@@ -60,17 +56,7 @@ public class JdbcProductDaoTest {
         assertTrue(allProducts.isEmpty());
     }
 
-    @Test
-    public void getPreparedQuery() throws IOException, TemplateException {
-        Map<String, Object> parametersMap = new HashMap<>();
-        final String keyWord = "iPhone";
-        parametersMap.put("keyWord", keyWord);
 
-        String queryName = "findAll";
-        String preparedQuery = productDao.getPreparedQuery(queryName, parametersMap);
-        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM"));
-        assertTrue(preparedQuery.contains("'"+keyWord+"'"));
-    }
 
     @Test
     public void givenExistingId_whenReturned_thenCorrect() {

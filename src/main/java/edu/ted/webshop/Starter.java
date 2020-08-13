@@ -49,7 +49,7 @@ public class Starter {
     public static void init() {
         System.out.println(System.getenv("PORT") + " is the port");
 
-        Integer port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
+        int port = Integer.parseInt(Optional.ofNullable(System.getenv("PORT")).orElse("8081"));
 
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(port);
@@ -71,8 +71,8 @@ public class Starter {
         LOGGER.info("Query entries: {}", queries.size());
         Properties dataSourceProperties = JdbcPropertyResolver.resolve();
         LOGGER.info("dsProperties entries: {}", dataSourceProperties.size());
-        JdbcProductDao productDao = new JdbcProductDao(new JdbcDataSourceFactory(dataSourceProperties).getDataSource(), templateEngine);
-        productDao.setQueries(queries);
+        JdbcProductDao productDao = new JdbcProductDao(new JdbcDataSourceFactory(dataSourceProperties).getDataSource());
+        //productDao.setQueries(queries);
         ProductService productService = new ProductService(productDao);
 
         initServlets(mainContextHandler, productService, templateEngine);

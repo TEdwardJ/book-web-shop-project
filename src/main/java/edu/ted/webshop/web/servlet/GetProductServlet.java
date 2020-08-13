@@ -2,10 +2,8 @@ package edu.ted.webshop.web.servlet;
 
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.entity.Product;
-import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 import edu.ted.webshop.utils.interfaces.TemplateEngine;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +15,8 @@ import java.util.Map;
 @WebServlet(name = "GetProductServlet", urlPatterns = "/product/*")
 public class GetProductServlet extends HttpServlet {
 
-    private ProductService productService;
-    private TemplateEngine templateEngine;
+    private final ProductService productService;
+    private final TemplateEngine templateEngine;
 
     public GetProductServlet(ProductService productService, TemplateEngine templateEngine) {
         this.productService = productService;
@@ -26,11 +24,11 @@ public class GetProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        final Product productById = productService.getProductById(req, map);
+        Product productById = productService.getProductById(req, map);
 
         if (productById == null) {
             resp.setContentLength(0);

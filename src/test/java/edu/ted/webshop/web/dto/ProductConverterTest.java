@@ -47,4 +47,14 @@ class ProductConverterTest {
         assertEquals(productDto.getPrice(), product.getPrice().toString());
         assertEquals(productDto.getVersionId(), product.getVersionId());
     }
+
+    @Test
+    public void givenNullProduct_whenReturnsEmptyProductDTO_thenCorrect() {
+        ProductDTO product = ProductConverter.fromProduct(null);
+        assertEquals("0", product.getId());
+        assertEquals("", product.getName());
+        assertEquals("", product.getDescription());
+        assertEquals("", product.getPrice());
+        assertEquals("", product.getVersionId());
+    }
 }

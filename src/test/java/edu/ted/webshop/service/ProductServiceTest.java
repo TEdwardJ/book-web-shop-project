@@ -2,6 +2,7 @@ package edu.ted.webshop.service;
 
 import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.entity.Product;
+import edu.ted.webshop.web.dto.ProductConverter;
 import edu.ted.webshop.web.dto.ProductDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,9 +74,10 @@ public class ProductServiceTest {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getRequestURI()).thenReturn("/product/12");
         when(req.getServletPath()).thenReturn("/product");
-        when(productDao.getOneById(12)).thenReturn(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5)));
+        when(productDao.getOneById(12)).thenReturn(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5")));
         Map<String, Object> map = new HashMap<>();
-        final Product returnedProduct = service.getProductById(req, map);
+        Product returnedProduct = service.getProductById(req, map);
+        ProductDTO returnedProductDTO = ProductConverter.fromProduct(returnedProduct);
         assertTrue(map.containsKey("formAction"));
         assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
         assertEquals(12, returnedProduct.getId());
@@ -84,27 +86,27 @@ public class ProductServiceTest {
         assertEquals("", returnedProduct.getPictureUrl());
         assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
         assertTrue(map.containsKey("product"));
-        assertEquals(returnedProduct, map.get("product"));
+        assertEquals(returnedProductDTO, map.get("product"));
     }
 
 
     @Test
-    public void givenKeyWord_whenReturnsListOfProducts_thenCorrect() {
+    public void givenKeyWord_whenReturnsListOfProductDTO_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn("mockProduct");
-        when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
+        when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5"))));
         Map<String, Object> map = new HashMap<>();
         service.searchProductByKeyWord(req, map);
         assertTrue(map.containsKey("keyWord"));
         assertTrue(map.containsKey("productCount"));
         assertTrue(map.containsKey("productList"));
-        List<Product> productList = (List<Product>) map.get("productList");
+        List<ProductDTO> productList = (List<ProductDTO>) map.get("productList");
         assertEquals(1, productList.size());
-        Product returnedProduct = productList.get(0);
+        ProductDTO returnedProduct = productList.get(0);
         assertEquals("mockProduct", returnedProduct.getName());
         assertEquals("mockProductDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
+        assertEquals("45.5", returnedProduct.getPrice());
     }
 
 
@@ -112,7 +114,7 @@ public class ProductServiceTest {
     public void givenEmptyKeyWord_whenReturnsNull_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter("keyWord")).thenReturn(null);
-        when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
+        when(productDao.searchProducts("mockProduct")).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5"))));
         Map<String, Object> map = new HashMap<>();
         service.searchProductByKeyWord(req, map);
         assertFalse(map.containsKey("keyWord"));
@@ -121,19 +123,19 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void whenReturnsListOfProducts_thenCorrect() {
-        when(productDao.getAll()).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal(45.5))));
+    public void whenReturnsListOfProductDTO_thenCorrect() {
+        when(productDao.getAll()).thenReturn(Arrays.asList(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5"))));
         Map<String, Object> map = new HashMap<>();
         service.getAll(map);
         assertTrue(map.containsKey("productCount"));
         assertTrue(map.containsKey("productList"));
-        List<Product> productList = (List<Product>) map.get("productList");
+        List<ProductDTO> productList = (List<ProductDTO>) map.get("productList");
         assertEquals(1, productList.size());
-        Product returnedProduct = productList.get(0);
+        ProductDTO returnedProduct = productList.get(0);
         assertEquals("mockProduct", returnedProduct.getName());
         assertEquals("mockProductDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal("45.5"), returnedProduct.getPrice());
+        assertEquals("45.5", returnedProduct.getPrice());
     }
 
     @Test
@@ -199,12 +201,12 @@ public class ProductServiceTest {
         assertTrue(map.containsKey("product"));
         assertTrue(map.containsKey("formAction"));
         assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
-        Product returnedProduct = (Product) map.get("product");
-        assertEquals(12, returnedProduct.getId());
+        ProductDTO returnedProduct = (ProductDTO) map.get("product");
+        assertEquals("12", returnedProduct.getId());
         assertEquals("mockName", returnedProduct.getName());
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(new BigDecimal("33.2"), returnedProduct.getPrice());
+        assertEquals("33.2", returnedProduct.getPrice());
     }
 
     @Test
@@ -221,18 +223,4 @@ public class ProductServiceTest {
         assertTrue(formAction.startsWith("/product/edit/12"));
     }
 
-    @Test
-    public void givenNewProduct_whenGetFormActionReturnsAddActionUrl_thenCorrect(){
-        Product product = new Product();
-        String formAction = service.getFormAction(product);
-        assertTrue(formAction.startsWith("/product/add"));
-    }
-
-    @Test
-    public void givenNewProduct_whenGetFormActionReturnsEditActionUrl_thenCorrect(){
-        Product product = new Product();
-        product.setId(12);
-        String formAction = service.getFormAction(product);
-        assertTrue(formAction.startsWith("/product/edit/12"));
-    }
 }

@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.stream.Collectors.toList;
+
 public class ProductService {
 
     private final JdbcProductDao productDao;
@@ -24,7 +26,6 @@ public class ProductService {
     }
 
     public List<String> validateProduct(ProductDTO productToValidate) {
-
         List<String> validationErrorList = new ArrayList<>();
 
         if (isEmptyOrNull(productToValidate.getName())) {
@@ -56,27 +57,34 @@ public class ProductService {
         } else {
             newProduct = new Product();
         }
-        map.put("product", newProduct);
-        map.put("formAction", getFormAction(newProduct));
+        ProductDTO productDTO = ProductConverter.fromProduct(newProduct);
+        map.put("product", productDTO);
+        map.put("formAction", getFormAction(productDTO));
         return newProduct;
     }
 
     public void searchProductByKeyWord(HttpServletRequest req, Map<String, Object> map) {
         String keyWord = Optional.ofNullable(req.getParameter("keyWord")).orElse("");
-        List<Product> productsList;
         if (keyWord.isEmpty()) {
             return;
-        } else {
-            productsList = productDao.searchProducts(keyWord);
         }
+        List<ProductDTO> productsList;
+        productsList = convertToListOfDTO(productDao.searchProducts(keyWord));
         map.put("keyWord", keyWord);
         map.put("productCount", productsList.size());
         map.put("productList", productsList);
         map.put("includeSearchForm", true);
     }
 
+    private List<ProductDTO> convertToListOfDTO(List<Product> listOfProducts) {
+        return listOfProducts
+                .stream()
+                .map(ProductConverter::fromProduct)
+                .collect(toList());
+    }
+
     public void getAll(Map<String, Object> map) {
-        List<Product> productsList = productDao.getAll();
+        List<ProductDTO> productsList = convertToListOfDTO(productDao.getAll());
         map.put("productCount", productsList.size());
         map.put("productList", productsList);
     }
@@ -84,8 +92,7 @@ public class ProductService {
     int getParameterFromUrl(HttpServletRequest req) {
         String servletPath = req.getServletPath();
         String requestURI = req.getRequestURI();
-        Pattern pattern = Pattern.compile(".*" + servletPath + "/(.*)");
-        Matcher matcher = pattern.matcher(requestURI);
+        Matcher matcher = Pattern.compile(".*" + servletPath + "/(.*)").matcher(requestURI);
         if (matcher.matches()) {
             return Integer.parseInt(matcher.group(1));
         }
@@ -113,14 +120,6 @@ public class ProductService {
         }
     }
 
-    String getFormAction(Product product) {
-        if (product == null || product.getId() == 0) {
-            return "/product/add";
-        } else {
-            return "/product/edit/" + product.getId();
-        }
-    }
-
     public void processProductFormSubmission(HttpServletRequest req, Map<String, Object> map) {
         ProductDTO newProduct = getProductFromRequest(req);
         List<String> validationWarningList = validateProduct(newProduct);
@@ -131,18 +130,19 @@ public class ProductService {
         } else {
             Product product = ProductConverter.toProduct(newProduct);
             if (product.getId() != 0) {
-                map.put("formAction", getFormAction(product));
+                map.put("formAction", getFormAction(newProduct));
                 String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
-                final Product updatedProduct = productDao.updateOne(product);
+                Product updatedProduct = productDao.updateOne(product);
                 map.put("product", updatedProduct);
                 if (updatedProduct.getVersionId().equals(oldProductVersion)) {
                     validationWarningList.add("The product you try to save was updated by someone else. Please <a href='" + req.getRequestURI() + "'>refresh</a> and try again");
                     map.put("validationWarning", validationWarningList);
                 }
             } else {
-                final Product insertedProduct = productDao.insertOne(product);
-                map.put("product", insertedProduct);
-                map.put("formAction", getFormAction(insertedProduct));
+                Product insertedProduct = productDao.insertOne(product);
+                ProductDTO insertedProductDTO = ProductConverter.fromProduct(insertedProduct);
+                map.put("product", insertedProductDTO);
+                map.put("formAction", getFormAction(insertedProductDTO));
             }
         }
     }
