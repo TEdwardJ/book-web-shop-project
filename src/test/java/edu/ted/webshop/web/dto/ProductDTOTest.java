@@ -54,7 +54,7 @@ class ProductDTOTest {
         final String productPrice = "5566";
         final String productVersionId = "5566-ddcc-bbnn";
 
-        ProductDTO product = new ProductDTO();
+        ProductDTO product = new ProductDTO(productId, productName, productDescription, productPictureUrl, productPrice, productVersionId);
 
         assertEquals(productId, product.getId());
         assertEquals(productName, product.getName());
