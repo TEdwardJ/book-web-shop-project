@@ -1,9 +1,6 @@
 package edu.ted.webshop.web.dto;
 
-import edu.ted.webshop.entity.Product;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +26,24 @@ class ProductDTOTest {
         assertEquals(productVersionId, product.getVersionId());
     }
 
+    @Test
+    void givenProductDTOFromConstructorWithNoParameters_whenGettersReturnEmptyValues_thenCorrect() {
+        final String productId = "0";
+        final String productName = "";
+        final String productDescription = "";
+        final String productPictureUrl = "";
+        final String productPrice = "";
+        final String productVersionId = "";
+
+        ProductDTO product = new ProductDTO();
+
+        assertEquals(productId, product.getId());
+        assertEquals(productName, product.getName());
+        assertEquals(productDescription, product.getDescription());
+        assertEquals(productPictureUrl, product.getPictureUrl());
+        assertEquals(productPrice, product.getPrice());
+        assertEquals(productVersionId, product.getVersionId());
+    }
 
     @Test
     void givenProductDTOFromConstructorWithVersion_whenGettersReturnGivenValues_thenCorrect() {
@@ -39,7 +54,7 @@ class ProductDTOTest {
         final String productPrice = "5566";
         final String productVersionId = "5566-ddcc-bbnn";
 
-        ProductDTO product = new ProductDTO(productId, productName, productDescription, productPictureUrl, productPrice, productVersionId);
+        ProductDTO product = new ProductDTO();
 
         assertEquals(productId, product.getId());
         assertEquals(productName, product.getName());
