@@ -3,8 +3,6 @@ package edu.ted.webshop.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,7 +16,7 @@ public class PropertyReader {
         Properties properties = new Properties();
         final URL resource = PropertyReader.class.getClassLoader().getResource(propertiesFile);
         if (resource == null) {
-            logger.warn("Resource {} not found {}", propertiesFile);
+            logger.warn("Resource {} not found", propertiesFile);
             return properties;
         }
         logger.info("Property file {}", resource.getPath());
@@ -26,7 +24,7 @@ public class PropertyReader {
             InputStream resourceStream = resource.openStream();
             properties.load(resourceStream);
         } catch (IOException e) {
-            logger.error("Property cannot be read since some error happend {}", e);
+            logger.error("Property cannot be read since some error happened", e);
             logger.error("Since the property file {} has not been read this Reader returns empty property set", propertiesFile);
         }
         return properties;

@@ -21,28 +21,28 @@ public class JdbcProductDaoTest {
     @BeforeAll
     public static void init() {
         Properties dataSourceProperties = PropertyReader.readPropertyFile("db.properties");
-        final JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
+        JdbcDataSourceFactory dataSourceFactory = new JdbcDataSourceFactory(dataSourceProperties);
         productDao = new JdbcProductDao(dataSourceFactory.getDataSource());
         Properties queries = PropertyReader.readPropertyFile("query.properties");
     }
 
     @Test
     public void whenGetAllReturnsList_thenCorrect() {
-        final List<Product> allProducts = productDao.getAll();
+        List<Product> allProducts = productDao.getAll();
         assertFalse(allProducts.isEmpty());
     }
 
     @Test
     public void whenGetAllAndSomeException_when_DataException_thenCorrect() {
         //when()
-        final List<Product> allProducts = productDao.getAll();
+        List<Product> allProducts = productDao.getAll();
         assertFalse(allProducts.isEmpty());
     }
 
     @Test
     public void givenKeyWordExistingInDB_whenSearchReturnsResults_thenCorrect() {
-        final String keyWord = "King";
-        final List<Product> allProducts = productDao.searchProducts(keyWord);
+        String keyWord = "King";
+        List<Product> allProducts = productDao.searchProducts(keyWord);
         assertFalse(allProducts.isEmpty());
         for (Product allProduct : allProducts) {
             assertTrue(allProduct.getName().concat(allProduct.getDescription()).contains(keyWord));
@@ -51,8 +51,8 @@ public class JdbcProductDaoTest {
 
     @Test
     public void givenKeyWordNonExistingInDB_whenSearchReturnsEmptyResults_thenCorrect() {
-        final String keyWord = "@##@#";
-        final List<Product> allProducts = productDao.searchProducts(keyWord);
+        String keyWord = "@##@#";
+        List<Product> allProducts = productDao.searchProducts(keyWord);
         assertTrue(allProducts.isEmpty());
     }
 
@@ -61,7 +61,7 @@ public class JdbcProductDaoTest {
     @Test
     public void givenExistingId_whenReturned_thenCorrect() {
         int productId = 24;
-        final Product product = productDao.getOneById(productId);
+        Product product = productDao.getOneById(productId);
         assertNotNull(product);
         assertEquals(productId, product.getId());
         assertEquals("It : film tie-in edition of Stephen...", product.getName());
@@ -79,14 +79,14 @@ public class JdbcProductDaoTest {
     @Test
     public void givenExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
         int productId = 28;
-        final Product oldProduct = productDao.getOneById(productId);
-        final String oldProductVersion = oldProduct.getVersionId();
-        final String newDescription = oldProduct.getDescription() + ". New Edition";
+        Product oldProduct = productDao.getOneById(productId);
+        String oldProductVersion = oldProduct.getVersionId();
+        String newDescription = oldProduct.getDescription() + ". New Edition";
         oldProduct.setDescription(newDescription);
-        final BigDecimal newPrice = oldProduct.getPrice().add(new BigDecimal(100));
+        BigDecimal newPrice = oldProduct.getPrice().add(new BigDecimal(100));
         oldProduct.setPrice(newPrice);
         Product updatedProduct = productDao.updateOne(oldProduct);
-        final Product product = productDao.getOneById(productId);
+        Product product = productDao.getOneById(productId);
         assertNotNull(product);
         assertNotEquals(oldProductVersion, product.getVersionId());
         assertEquals(productId, product.getId());
@@ -100,14 +100,14 @@ public class JdbcProductDaoTest {
     @Test
     public void givenExistingIdAndGetProductAndChangeAndUpdateButTheProductWasAlreadyUpdatedInParallel_whenGetByIdReturnsNonUpdated_thenCorrect() {
         int productId = 28;
-        final Product productVersion0 = productDao.getOneById(productId);
-        final String version0 = productVersion0.getVersionId();
-        final String newDescription = productVersion0.getDescription() + ". New Edition";
+        Product productVersion0 = productDao.getOneById(productId);
+        String version0 = productVersion0.getVersionId();
+        String newDescription = productVersion0.getDescription() + ". New Edition";
         productVersion0.setDescription(newDescription);
-        final BigDecimal newPrice = productVersion0.getPrice().add(new BigDecimal(100));
+        BigDecimal newPrice = productVersion0.getPrice().add(new BigDecimal(100));
         productVersion0.setPrice(newPrice);
-        final Product productVersion0UpdatedToVersion1 = productDao.updateOne(productVersion0);
-        final Product productVersion1 = productDao.getOneById(productId);
+        Product productVersion0UpdatedToVersion1 = productDao.updateOne(productVersion0);
+        Product productVersion1 = productDao.getOneById(productId);
         assertNotNull(productVersion1);
         assertNotEquals(version0, productVersion1.getVersionId());
         assertEquals(productId, productVersion1.getId());
@@ -118,10 +118,10 @@ public class JdbcProductDaoTest {
         assertEquals(productVersion0UpdatedToVersion1, productVersion1);
 
         //Imitate kinda the product was updated in parallel session
-        final String product1Version = productVersion1.getVersionId();
+        String product1Version = productVersion1.getVersionId();
         productVersion1.setVersionId(UUID.randomUUID().toString());
         productVersion1.setDescription(productVersion1.getDescription()+"!!!");
-        final Product productVersion1NotUpdatedToVersion2 = productDao.updateOne(productVersion1);
+        Product productVersion1NotUpdatedToVersion2 = productDao.updateOne(productVersion1);
         assertEquals(productVersion1.getVersionId(), productVersion1NotUpdatedToVersion2.getVersionId());
         assertNotEquals(product1Version, productVersion1NotUpdatedToVersion2.getVersionId());
         assertEquals(productVersion1.getDescription(), productVersion1NotUpdatedToVersion2.getDescription());
@@ -130,27 +130,27 @@ public class JdbcProductDaoTest {
     @Test
     public void givenNonExistingIdAndGetProductChangeFieldsAndUpdate_whenGetByIdReturnsUpdated_thenCorrect() {
         int productId = 288;
-        final String productName = "Non Existing Product";
-        final String productDescription = "Non Existing Product Description";
-        final BigDecimal newPrice = new BigDecimal(105);
-        final Product oldProduct = new Product(productId, productName, productDescription, "", newPrice);
-        final Product updatedProduct = productDao.updateOne(oldProduct);
-        final Product product = productDao.getOneById(productId);
+        String productName = "Non Existing Product";
+        String productDescription = "Non Existing Product Description";
+        BigDecimal newPrice = new BigDecimal(105);
+        Product oldProduct = new Product(productId, productName, productDescription, "", newPrice);
+        Product updatedProduct = productDao.updateOne(oldProduct);
+        Product product = productDao.getOneById(productId);
         assertEquals(oldProduct, updatedProduct);
         assertNull(product);
     }
 
     @Test
     public void givenNewProductThenInsert_whenGetByIdReturnsNewProduct_thenCorrect() {
-        final int productId = 2222;
-        final String productName = "New Book";
-        final String productDescription = "New Book Description";
-        final BigDecimal productPrice = new BigDecimal(2314);
-        final String pictureUrl = "http://google.com//picturetest.jpg";
+        int productId = 2222;
+        String productName = "New Book";
+        String productDescription = "New Book Description";
+        BigDecimal productPrice = new BigDecimal(2314);
+        String pictureUrl = "http://google.com//picturetest.jpg";
         Product newProduct = new Product(productId, productName, productDescription, pictureUrl, productPrice);
         Product insertedProduct = productDao.insertOne(newProduct);
 
-        final Product product = productDao.getOneById(insertedProduct.getId());
+        Product product = productDao.getOneById(insertedProduct.getId());
         assertNotNull(product);
         assertEquals(insertedProduct.getId(), product.getId());
         assertEquals(productName, product.getName());

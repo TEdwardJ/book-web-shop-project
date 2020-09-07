@@ -10,26 +10,26 @@ import java.io.Writer;
 import java.util.Map;
 
 public class TemplatorEngine implements TemplateEngine {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private TemplateProcessor processor;
+    private final TemplateProcessor processor;
 
     public TemplatorEngine(TemplateProcessor processor) {
         this.processor = processor;
     }
 
     @Override
-    public void writePage(String page, Writer writer, Map fieldsMap) {
+    public void writePage(String page, Writer writer, Map<String, Object> fieldsMap) {
         try {
             processor.process(page, fieldsMap, writer);
         } catch (FileNotFoundException e) {
             logger.error("Template Engine Error occurred:", e);
-            logger.error("Template page:", page);
+            logger.error("Template page: {}", page);
         }
     }
 
     @Override
-    public void writeString(String templateName, String templateStr, Writer writer, Map<String, Object> fieldsMap) throws Exception {
+    public void writeString(String templateName, String templateStr, Writer writer, Map<String, Object> fieldsMap) {
 
     }
 }

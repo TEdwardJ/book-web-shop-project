@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class JdbcPropertyResolver {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
 
     public static Properties resolve() {
         String dbUriString = System.getenv("DATABASE_URL");

@@ -127,23 +127,23 @@ public class ProductService {
             map.put("validationWarning", validationWarningList);
             map.put("product", newProduct);
             map.put("formAction", getFormAction(newProduct));
-        } else {
-            Product product = ProductConverter.toProduct(newProduct);
-            if (product.getId() != 0) {
-                map.put("formAction", getFormAction(newProduct));
-                String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
-                Product updatedProduct = productDao.updateOne(product);
-                map.put("product", updatedProduct);
-                if (updatedProduct.getVersionId().equals(oldProductVersion)) {
-                    validationWarningList.add("The product you try to save was updated by someone else. Please <a href='" + req.getRequestURI() + "'>refresh</a> and try again");
-                    map.put("validationWarning", validationWarningList);
-                }
-            } else {
-                Product insertedProduct = productDao.insertOne(product);
-                ProductDTO insertedProductDTO = ProductConverter.fromProduct(insertedProduct);
-                map.put("product", insertedProductDTO);
-                map.put("formAction", getFormAction(insertedProductDTO));
+            return;
+        }
+        Product product = ProductConverter.toProduct(newProduct);
+        if (product.getId() != 0) {
+            map.put("formAction", getFormAction(newProduct));
+            String oldProductVersion = Optional.ofNullable(product.getVersionId()).orElse("");
+            Product updatedProduct = productDao.updateOne(product);
+            map.put("product", updatedProduct);
+            if (updatedProduct.getVersionId().equals(oldProductVersion)) {
+                validationWarningList.add("The product you are trying to save was updated by someone else. Please <a href='" + req.getRequestURI() + "'>refresh</a> and try again");
+                map.put("validationWarning", validationWarningList);
             }
+        } else {
+            Product insertedProduct = productDao.insertOne(product);
+            ProductDTO insertedProductDTO = ProductConverter.fromProduct(insertedProduct);
+            map.put("product", insertedProductDTO);
+            map.put("formAction", getFormAction(insertedProductDTO));
         }
     }
 }

@@ -3,6 +3,7 @@ package edu.ted.webshop.dao;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
 import edu.ted.webshop.dao.mapper.ProductRowMapper;
+import edu.ted.webshop.utils.ProductCRUDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class JdbcProductDao {
         List<Product> productsList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             Statement statement = connection.createStatement();
-            final String selectAllQuery = ProductCRUDGenerator.getSelectAllQuery();
+            String selectAllQuery = ProductCRUDGenerator.getSelectAllQuery();
             boolean executed = statement.execute(selectAllQuery);
             logger.debug("Prepared Query: {}", selectAllQuery);
             if (executed) {

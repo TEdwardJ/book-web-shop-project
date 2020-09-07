@@ -26,7 +26,7 @@ class JdbcDataSourceFactoryTest {
 
     @Test
     void givenDataSourceFactory_thenGetConnection_whenNoException_thenCorrect() throws SQLException {
-        final DataSource dataSource = factory.getDataSource();
+        DataSource dataSource = factory.getDataSource();
         Connection connection = dataSource.getConnection();
         connection.close();
     }

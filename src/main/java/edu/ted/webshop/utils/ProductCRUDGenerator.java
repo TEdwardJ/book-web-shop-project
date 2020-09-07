@@ -1,4 +1,4 @@
-package edu.ted.webshop.dao;
+package edu.ted.webshop.utils;
 
 import edu.ted.webshop.entity.Product;
 
