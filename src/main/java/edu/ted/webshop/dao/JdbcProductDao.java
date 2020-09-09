@@ -107,7 +107,6 @@ public class JdbcProductDao {
 
     public Product insertOne(Product product) {
         int newProductId = 0;
-
         product.setVersionId(UUID.randomUUID().toString());
         String query = ProductCRUDGenerator.getInsertQuery(product);
         logger.debug("Prepared Query: {}", query);

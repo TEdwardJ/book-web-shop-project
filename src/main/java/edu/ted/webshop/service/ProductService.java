@@ -151,7 +151,7 @@ public class ProductService {
         }
     }
 
-    private boolean validateVersion(String oldProductVersion, String updatedProductVersion) {
+    static boolean validateVersion(String oldProductVersion, String updatedProductVersion) {
         boolean result = true;
         if (Objects.equals(updatedProductVersion, oldProductVersion)) {
             result = false;

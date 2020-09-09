@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -76,6 +73,22 @@ public class ProductServiceTest {
         List<String> warningsList = (List<String>) parametersMap.get("validationWarning");
         assertEquals(1, warningsList.size());
         assertTrue(warningsList.contains("Product Price should be set to the value greater than 0;"));
+    }
+
+    @Test
+    public void givenOldAndNewProductVersionsEqual_whenValidateVersionReturnsFalse_thenCorrect() {
+        String oldVersion = UUID.randomUUID().toString();
+        String newVersion = oldVersion;
+        boolean validationResult = ProductService.validateVersion(oldVersion, newVersion);
+        assertFalse(validationResult);
+    }
+
+    @Test
+    public void givenOldAndNewProductVersionsNonEqual_whenValidateVersionReturnsTrue_thenCorrect() {
+        String oldVersion = UUID.randomUUID().toString();
+        String newVersion = UUID.randomUUID().toString();
+        boolean validationResult = ProductService.validateVersion(oldVersion, newVersion);
+        assertTrue(validationResult);
     }
 
     @Test
