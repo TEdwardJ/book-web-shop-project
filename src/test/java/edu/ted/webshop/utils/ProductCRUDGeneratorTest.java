@@ -1,6 +1,5 @@
 package edu.ted.webshop.utils;
 
-import edu.ted.webshop.utils.ProductCRUDGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +23,13 @@ class ProductCRUDGeneratorTest {
     @Test
     public void givenTextWithQuote_whenReturnsQuoteReplaced_thenCorrect() {
         String initialLine ="some text ' and some text again";
-        String processedLine = ProductCRUDGenerator.quoteReplace(initialLine);
+        String processedLine = ProductCRUDGenerator.getFieldValue(initialLine);
         assertEquals("some text '' and some text again", processedLine);
+    }
+    @Test
+    public void givenNullField_whenReturnsEmpty_thenCorrect() {
+        String initialLine = null;
+        String processedLine = ProductCRUDGenerator.getFieldValue(initialLine);
+        assertEquals("", processedLine);
     }
 }

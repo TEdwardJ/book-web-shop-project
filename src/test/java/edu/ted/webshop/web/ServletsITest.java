@@ -29,9 +29,6 @@ public class ServletsITest {
     @BeforeAll
     public static void startServer() throws Exception
     {
-        /*server = new WebShopServer();
-        server.init();
-        server.start();*/
         Starter.main(new String[]{});
         server = Starter.getServer();
 
@@ -164,6 +161,22 @@ public class ServletsITest {
         String responseBody = response.getContentAsString();
         assertThat("Response Content", responseBody, containsString("Not Found"));
     }
+
+    @Test
+    public void editNonExistingZeroIdProductDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
+        URI uri = new URI("http://127.0.0.1:8081/product/edit/0");
+        ContentResponse response = client.newRequest(uri)
+                .method(HttpMethod.GET)
+                .send();
+        assertThat("HTTP Response Status", response.getStatus(), is(HttpStatus.OK_200));
+
+        // test response content
+        assertThat("Content Type", response.getMediaType(), is("text/html"));
+        assertThat("Request Path", response.getRequest().getPath(), is("/notFound.html"));
+        String responseBody = response.getContentAsString();
+        assertThat("Response Content", responseBody, containsString("Not Found"));
+    }
+
 
     @Test
     public void getNonExistingProductDoGet() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {

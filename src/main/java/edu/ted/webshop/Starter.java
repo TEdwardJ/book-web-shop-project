@@ -29,7 +29,7 @@ import java.util.Properties;
 
 public class Starter {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRowMapper.class);
 
     private static Server server;
     private static TemplateEngine templatorEngine;

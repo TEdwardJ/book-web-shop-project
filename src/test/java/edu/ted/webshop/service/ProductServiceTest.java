@@ -33,14 +33,17 @@ public class ProductServiceTest {
     @Test
     public void givenProductWithAllFieldsFilled_whenValidate_thenCorrect() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "4.5");
-        List<String> warningsList = service.validateProduct(testedProduct);
-        assertEquals(0, warningsList.size());
+        Map<String, Object> parametersMap = new HashMap<>();
+        service.validateProduct(testedProduct, parametersMap);
+        assertNull(parametersMap.get("validationWarning"));
     }
 
     @Test
     public void givenProductWithEmptyName_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "", "description", "", "4.5");
-        List<String> warningsList = service.validateProduct(testedProduct);
+        Map<String, Object> parametersMap = new HashMap<>();
+        service.validateProduct(testedProduct, parametersMap);
+        List<String> warningsList = (List<String>) parametersMap.get("validationWarning");
         assertEquals(1, warningsList.size());
         assertTrue(warningsList.contains("Product Name cannot be empty;"));
     }
@@ -48,7 +51,9 @@ public class ProductServiceTest {
     @Test
     public void givenProductWithEmptyPrice_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "");
-        List<String> warningsList = service.validateProduct(testedProduct);
+        Map<String, Object> parametersMap = new HashMap<>();
+        service.validateProduct(testedProduct, parametersMap);
+        List<String> warningsList = (List<String>) parametersMap.get("validationWarning");
         assertEquals(1, warningsList.size());
         assertTrue(warningsList.contains("Product Price should be specified;"));
     }
@@ -56,15 +61,19 @@ public class ProductServiceTest {
     @Test
     public void givenProductWithPriceContainingLetters_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "fdf");
-        List<String> warningsList = service.validateProduct(testedProduct);
+        Map<String, Object> parametersMap = new HashMap<>();
+        service.validateProduct(testedProduct, parametersMap);
+        List<String> warningsList = (List<String>) parametersMap.get("validationWarning");
         assertEquals(1, warningsList.size());
-        assertTrue(warningsList.contains("Product Price should not contains any characters except digits and delimiters;"));
+        assertTrue(warningsList.contains("Product Price should not contain any characters except digits and delimiters;"));
     }
 
     @Test
     public void givenProductWithZeroPrice_whenValidate_thenWarning() {
         ProductDTO testedProduct = new ProductDTO("1222", "name", "description", "", "0");
-        List<String> warningsList = service.validateProduct(testedProduct);
+        Map<String, Object> parametersMap = new HashMap<>();
+        service.validateProduct(testedProduct, parametersMap);
+        List<String> warningsList = (List<String>) parametersMap.get("validationWarning");
         assertEquals(1, warningsList.size());
         assertTrue(warningsList.contains("Product Price should be set to the value greater than 0;"));
     }
@@ -181,12 +190,12 @@ public class ProductServiceTest {
         assertTrue(map.containsKey("product"));
         assertTrue(map.containsKey("formAction"));
         assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
-        Product returnedProduct = (Product) map.get("product");
-        assertEquals(12, returnedProduct.getId());
+        ProductDTO returnedProduct = (ProductDTO) map.get("product");
+        assertEquals("12", returnedProduct.getId());
         assertEquals("mockName", returnedProduct.getName());
         assertEquals("mockDescription", returnedProduct.getDescription());
         assertEquals("", returnedProduct.getPictureUrl());
-        assertEquals(0, returnedProduct.getPrice().compareTo(new BigDecimal("33.2")));
+        assertEquals(0, returnedProduct.getPrice().compareTo("33.2"));
         assertEquals("bbbb-cccc-dddd", returnedProduct.getVersionId());
     }
 
@@ -210,16 +219,56 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void givenNewProductDto_whenGetFormActionReturnsAddActionUrl_thenCorrect(){
+    public void givenNewProductDTO_whenProcessed_thenCorrect() {
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
+        ProductDTO newProductToBeProcessed = new ProductDTO("12", "mockName", "mockDescription", "", "33.2");
+        when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
+
+        Map<String, Object> map = new HashMap<>();
+        service.processNewProduct(map, newProductToBeProcessed);
+        assertTrue(map.containsKey("product"));
+        assertTrue(map.containsKey("formAction"));
+        assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
+        ProductDTO processedProduct = (ProductDTO) map.get("product");
+        assertEquals("12", processedProduct.getId());
+        assertEquals("mockName", processedProduct.getName());
+        assertEquals("mockDescription", processedProduct.getDescription());
+        assertEquals("", processedProduct.getPictureUrl());
+        assertEquals("33.2", processedProduct.getPrice());
+    }
+
+    @Test
+    public void givenExistingProductDTO_whenProcessed_thenCorrect() {
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("BB-CC-DD");
+        ProductDTO newProductToBeProcessed = new ProductDTO("12", "mockName", "mockDescription", "", "33.2", "BB-CC-DD");
+        when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
+
+        Map<String, Object> map = new HashMap<>();
+        service.processExistingProduct(req, map, newProductToBeProcessed);
+        assertTrue(map.containsKey("product"));
+        assertTrue(map.containsKey("formAction"));
+        assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
+        ProductDTO processedProduct = (ProductDTO) map.get("product");
+        assertEquals("12", processedProduct.getId());
+        assertEquals("mockName", processedProduct.getName());
+        assertEquals("mockDescription", processedProduct.getDescription());
+        assertEquals("", processedProduct.getPictureUrl());
+        assertEquals("33.2", processedProduct.getPrice());
+    }
+
+    @Test
+    public void givenNewProductDto_whenGetFormActionReturnsAddActionUrl_thenCorrect() {
         ProductDTO product = new ProductDTO("0", "", "", "", "12");
-        String formAction = service.getFormAction(product);
+        String formAction = service.getFormActionByProduct(product);
         assertTrue(formAction.startsWith("/product/add"));
     }
 
     @Test
-    public void givenNewProductDto_whenGetFormActionReturnsEditActionUrl_thenCorrect(){
+    public void givenNewProductDto_whenGetFormActionReturnsEditActionUrl_thenCorrect() {
         ProductDTO product = new ProductDTO("12", "", "", "", "12");
-        String formAction = service.getFormAction(product);
+        String formAction = service.getFormActionByProduct(product);
         assertTrue(formAction.startsWith("/product/edit/12"));
     }
 

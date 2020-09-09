@@ -42,7 +42,7 @@ class ProductTest {
         Product product1 = new Product(productName, productDescription, productPictureUrl, new BigDecimal(productPrice));
         Product product2 = new Product(productName, productDescription, productPictureUrl, new BigDecimal(productPrice));
         product1.setVersionId(productVersionId);
-        assertTrue(Objects.equals(product1, product2));
+        assertEquals(product2, product1);
         assertEquals(Objects.hashCode(product1), Objects.hashCode(product2));
     }
 
