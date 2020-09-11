@@ -128,8 +128,31 @@ public class ServletsITest {
     }
 
     @Test
+    public void editNonExistingProductDoPost() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
+        URI uri = new URI("http://127.0.0.1:8081/product/edit/288");
+        String oldVersion = "";
+        ContentResponse response = client.newRequest(uri)
+                .method(HttpMethod.POST)
+                .param("id", "288")
+                .param("name", "The Bazaar of Bad Dreams Export")
+                .param("description", "Stephen King. The Bazaar of Bad Dreams Export")
+                .param("pictureUrl", "https://book-ye.com.ua/upload/resize_cache/iblock/1f5/230_355_1/91c36244_917f_11e7_80cf_000c29ae1566_469831ce_a092_11e7_80d1_000c29ae1566.jpg")
+                .param("price", "222")
+                .param("versionId", oldVersion)
+                .send();
+        assertThat("HTTP Response Status", response.getStatus(), is(HttpStatus.OK_200));
+
+        // test response content
+        assertThat("Content Type", response.getMediaType(), is("text/html"));
+        assertThat("Request Path", response.getRequest().getPath(), is("/notFound.html"));
+        String responseBody = response.getContentAsString();
+        assertThat("Response Content", responseBody, containsString("Not Found"));
+    }
+
+    @Test
     public void editProductDoPost() throws InterruptedException, ExecutionException, TimeoutException, URISyntaxException {
         URI uri = new URI("http://127.0.0.1:8081/product/edit/28");
+        String oldVersion = "";
         ContentResponse response = client.newRequest(uri)
                 .method(HttpMethod.POST)
                 .param("id", "28")
@@ -137,6 +160,7 @@ public class ServletsITest {
                 .param("description", "Stephen King. The Bazaar of Bad Dreams Export")
                 .param("pictureUrl", "https://book-ye.com.ua/upload/resize_cache/iblock/1f5/230_355_1/91c36244_917f_11e7_80cf_000c29ae1566_469831ce_a092_11e7_80d1_000c29ae1566.jpg")
                 .param("price", "222")
+                .param("versionId", oldVersion)
                 .send();
         assertThat("HTTP Response Status", response.getStatus(), is(HttpStatus.OK_200));
 

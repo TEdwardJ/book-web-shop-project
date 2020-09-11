@@ -96,7 +96,9 @@ public class ProductServiceTest {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getRequestURI()).thenReturn("/product/12");
         when(req.getServletPath()).thenReturn("/product");
-        when(productDao.getOneById(12)).thenReturn(new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5")));
+        Product product = new Product(12, "mockProduct", "mockProductDescription", "", new BigDecimal("45.5"));
+        product.setVersionId(UUID.randomUUID().toString());
+        when(productDao.getOneById(12)).thenReturn(product);
         Map<String, Object> map = new HashMap<>();
         Product returnedProduct = service.getProductById(req, map);
         ProductDTO returnedProductDTO = ProductConverter.fromProduct(returnedProduct);
@@ -182,7 +184,8 @@ public class ProductServiceTest {
     public void givenRequestAfterFormSubmission_whenGetProductDTOFromRequest_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("aaaa-bbbb-cccc");
-        final ProductDTO productFromRequest = service.getProductFromRequest(req);
+        when(req.getRequestURI()).thenReturn("/product/edit/12");
+        ProductDTO productFromRequest = service.getProductFromRequest(req);
         assertEquals("12", productFromRequest.getId());
         assertEquals("mockName", productFromRequest.getName());
         assertEquals("mockDescription", productFromRequest.getDescription());
@@ -194,7 +197,8 @@ public class ProductServiceTest {
     public void givenRequestAfterFormSubmissionWithExistingProduct_whenUpdated_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
         when(req.getParameter(any())).thenReturn("12").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("bbbb-cccc-dddd");
-        final Product mockProduct = new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2"));
+        when(req.getRequestURI()).thenReturn("/product/edit/12");
+        Product mockProduct = new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2"));
         mockProduct.setVersionId("bbbb-cccc-dddd");
         when(productDao.updateOne(any())).thenReturn(mockProduct);
 
@@ -215,8 +219,11 @@ public class ProductServiceTest {
     @Test
     public void givenRequestAfterFormSubmissionWithNonExistingProduct_whenInserted_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
-        when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
-        when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
+        when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("");
+        when(req.getRequestURI()).thenReturn("/product/add");
+        Product insertedProduct = new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2"));
+        insertedProduct.setVersionId(UUID.randomUUID().toString());
+        when(productDao.insertOne(any())).thenReturn(insertedProduct);
 
         Map<String, Object> map = new HashMap<>();
         service.processProductFormSubmission(req, map);
@@ -234,9 +241,11 @@ public class ProductServiceTest {
     @Test
     public void givenNewProductDTO_whenProcessed_thenCorrect() {
         HttpServletRequest req = mock(HttpServletRequest.class);
-        when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2");
+        when(req.getParameter(any())).thenReturn("0").thenReturn("mockName").thenReturn("mockDescription").thenReturn("").thenReturn("33.2").thenReturn("");
         ProductDTO newProductToBeProcessed = new ProductDTO("12", "mockName", "mockDescription", "", "33.2");
-        when(productDao.insertOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
+        Product insertedProduct = new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2"));
+        insertedProduct.setVersionId(UUID.randomUUID().toString());
+        when(productDao.insertOne(any())).thenReturn(insertedProduct);
 
         Map<String, Object> map = new HashMap<>();
         service.processNewProduct(map, newProductToBeProcessed);
@@ -259,7 +268,7 @@ public class ProductServiceTest {
         when(productDao.updateOne(any())).thenReturn(new Product(12, "mockName", "mockDescription", "", new BigDecimal("33.2")));
 
         Map<String, Object> map = new HashMap<>();
-        service.processExistingProduct(req, map, newProductToBeProcessed);
+        service.processExistingProduct(req.getRequestURI(), map, newProductToBeProcessed);
         assertTrue(map.containsKey("product"));
         assertTrue(map.containsKey("formAction"));
         assertTrue(map.get("formAction").toString().startsWith("/product/edit/"));
@@ -280,9 +289,27 @@ public class ProductServiceTest {
 
     @Test
     public void givenNewProductDto_whenGetFormActionReturnsEditActionUrl_thenCorrect() {
-        ProductDTO product = new ProductDTO("12", "", "", "", "12");
+        ProductDTO product = new ProductDTO("12", "", "", "", "12", "bb-cc-dd");
         String formAction = service.getFormActionByProduct(product);
         assertTrue(formAction.startsWith("/product/edit/12"));
+    }
+
+    @Test
+    public void givenProductDtoWithNoVersion_whenMapContainsAddNewFormAction_thenCorrect(){
+        ProductDTO newProductToBeProcessed = new ProductDTO("12", "mockName", "mockDescription", "", "33.2");
+        Map<String, Object> map = new HashMap<>();
+        service.prepareResponseMap(map, newProductToBeProcessed);
+        assertEquals("/product/add", map.get("formAction"));
+        assertEquals(newProductToBeProcessed, map.get("product"));
+    }
+
+    @Test
+    public void givenProductDtoWithVersion_whenMapContainsAddNewFormAction_thenCorrect(){
+        ProductDTO newProductToBeProcessed = new ProductDTO("122", "mockName", "mockDescription", "", "33.2", "BB-CC-DD");
+        Map<String, Object> map = new HashMap<>();
+        service.prepareResponseMap(map, newProductToBeProcessed);
+        assertEquals("/product/edit/122", map.get("formAction"));
+        assertEquals(newProductToBeProcessed, map.get("product"));
     }
 
 }

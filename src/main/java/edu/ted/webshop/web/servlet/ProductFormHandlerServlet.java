@@ -25,6 +25,15 @@ public class ProductFormHandlerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> map = new HashMap<>();
+        Product productById;
+        if (!req.getRequestURI().equals("/product/add")) {
+            productById = productService.getProductById(req, map);
+            if (productById == null) {
+                resp.setContentLength(0);
+                resp.sendRedirect("/notFound.html");
+                return;
+            }
+        }
         productService.processProductFormSubmission(req, map);
 
         resp.setContentType("text/html;charset=utf-8");
@@ -37,12 +46,16 @@ public class ProductFormHandlerServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> map = new HashMap<>();
-        Product productById = productService.getProductById(req, map);
-
-        if (productById == null) {
-            resp.setContentLength(0);
-            resp.sendRedirect("/notFound.html");
-            return;
+        Product productById;
+        if (req.getRequestURI().equals("/product/add")) {
+            productById = productService.getNewProduct(map);
+        } else {
+            productById = productService.getProductById(req, map);
+            if (productById == null) {
+                resp.setContentLength(0);
+                resp.sendRedirect("/notFound.html");
+                return;
+            }
         }
 
         templateEngine.writePage("productForm.html", resp.getWriter(), map);
