@@ -24,7 +24,11 @@ public class ProductService {
         return field == null || field.isEmpty();
     }
 
-    public boolean validateProduct(ProductDTO productToValidate, Map<String, Object> responseMap) {
+    boolean validateVersion(String oldProductVersion, String updatedProductVersion) {
+        return !Objects.equals(updatedProductVersion, oldProductVersion);
+    }
+
+    boolean validateProduct(ProductDTO productToValidate, Map<String, Object> responseMap) {
         List<String> validationWarningList = new ArrayList<>();
 
         if (isEmptyOrNull(productToValidate.getName())) {
@@ -152,10 +156,6 @@ public class ProductService {
             validationErrorList.add("The product you are trying to save was updated by someone else. Please <a href='" + requestURI + "'>refresh</a> and try again");
             responseMap.put("validationWarning", validationErrorList);
         }
-    }
-
-    static boolean validateVersion(String oldProductVersion, String updatedProductVersion) {
-        return !Objects.equals(updatedProductVersion, oldProductVersion);
     }
 
     void processNewProduct(Map<String, Object> responseMap, ProductDTO newProduct) {

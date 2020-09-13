@@ -79,7 +79,7 @@ public class ProductServiceTest {
     public void givenOldAndNewProductVersionsEqual_whenValidateVersionReturnsFalse_thenCorrect() {
         String oldVersion = UUID.randomUUID().toString();
         String newVersion = oldVersion;
-        boolean validationResult = ProductService.validateVersion(oldVersion, newVersion);
+        boolean validationResult = service.validateVersion(oldVersion, newVersion);
         assertFalse(validationResult);
     }
 
@@ -87,7 +87,7 @@ public class ProductServiceTest {
     public void givenOldAndNewProductVersionsNonEqual_whenValidateVersionReturnsTrue_thenCorrect() {
         String oldVersion = UUID.randomUUID().toString();
         String newVersion = UUID.randomUUID().toString();
-        boolean validationResult = ProductService.validateVersion(oldVersion, newVersion);
+        boolean validationResult = service.validateVersion(oldVersion, newVersion);
         assertTrue(validationResult);
     }
 

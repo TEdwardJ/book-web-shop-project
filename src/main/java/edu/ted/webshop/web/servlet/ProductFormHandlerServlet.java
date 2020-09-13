@@ -48,7 +48,7 @@ public class ProductFormHandlerServlet extends HttpServlet {
         Map<String, Object> map = new HashMap<>();
         Product productById;
         if (req.getRequestURI().equals("/product/add")) {
-            productById = productService.getNewProduct(map);
+            productService.getNewProduct(map);
         } else {
             productById = productService.getProductById(req, map);
             if (productById == null) {
