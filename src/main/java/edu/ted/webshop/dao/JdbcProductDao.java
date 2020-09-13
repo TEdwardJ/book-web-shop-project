@@ -3,7 +3,7 @@ package edu.ted.webshop.dao;
 import edu.ted.webshop.entity.Product;
 import edu.ted.webshop.exception.DataException;
 import edu.ted.webshop.dao.mapper.ProductRowMapper;
-import edu.ted.webshop.utils.ProductCRUDGenerator;
+import edu.ted.webshop.utils.ProductCRUDQueryGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class JdbcProductDao {
 
     public List<Product> getAll() {
         List<Product> productsList = new ArrayList<>();
-        String selectAllQuery = ProductCRUDGenerator.getSelectAllQuery();
+        String selectAllQuery = ProductCRUDQueryGenerator.getSelectAllQuery();
         logger.debug("Prepared Query: {}", selectAllQuery);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -46,7 +46,7 @@ public class JdbcProductDao {
 
     public List<Product> searchProducts(String keyWord) {
         List<Product> productsList = new ArrayList<>();
-        String query = ProductCRUDGenerator.getFindAllQuery(keyWord);
+        String query = ProductCRUDQueryGenerator.getFindAllQuery(keyWord);
         logger.debug("Prepared Query: {}", query);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -64,9 +64,8 @@ public class JdbcProductDao {
         }
     }
 
-
     public Product getOneById(int id) {
-        String query = ProductCRUDGenerator.getGetOneQuery(id);
+        String query = ProductCRUDQueryGenerator.getGetOneQuery(id);
         logger.debug("Prepared Query: {}", query);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -87,7 +86,7 @@ public class JdbcProductDao {
     public Product updateOne(Product product) {
         String oldVersionId = Optional.ofNullable(product.getVersionId()).orElse("");
         product.setVersionId(UUID.randomUUID().toString());
-        String query = ProductCRUDGenerator.getUpdateQuery(product, oldVersionId);
+        String query = ProductCRUDQueryGenerator.getUpdateQuery(product, oldVersionId);
         logger.debug("Prepared Query: {}", query);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -108,7 +107,7 @@ public class JdbcProductDao {
     public Product insertOne(Product product) {
         int newProductId = 0;
         product.setVersionId(UUID.randomUUID().toString());
-        String query = ProductCRUDGenerator.getInsertQuery(product);
+        String query = ProductCRUDQueryGenerator.getInsertQuery(product);
         logger.debug("Prepared Query: {}", query);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {

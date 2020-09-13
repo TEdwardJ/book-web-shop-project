@@ -6,7 +6,6 @@ import edu.ted.webshop.dao.JdbcProductDao;
 import edu.ted.webshop.dao.JdbcPropertyResolver;
 import edu.ted.webshop.service.ProductService;
 import edu.ted.webshop.dao.mapper.ProductRowMapper;
-import edu.ted.webshop.utils.PropertyReader;
 import edu.ted.webshop.utils.FreeMarkerTemplateEngine;
 import edu.ted.webshop.utils.TemplatorEngine;
 import edu.ted.webshop.utils.interfaces.TemplateEngine;
@@ -67,12 +66,9 @@ public class Starter {
 
         templatorEngine = new TemplatorEngine(templateProcessor);
 
-        Properties queries = PropertyReader.readPropertyFile("query.properties");
-        LOGGER.info("Query entries: {}", queries.size());
         Properties dataSourceProperties = JdbcPropertyResolver.resolve();
         LOGGER.info("dsProperties entries: {}", dataSourceProperties.size());
         JdbcProductDao productDao = new JdbcProductDao(new JdbcDataSourceFactory(dataSourceProperties).getDataSource());
-        //productDao.setQueries(queries);
         ProductService productService = new ProductService(productDao);
 
         initServlets(mainContextHandler, productService, templateEngine);

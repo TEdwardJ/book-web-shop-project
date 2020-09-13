@@ -2,7 +2,7 @@ package edu.ted.webshop.utils;
 
 import edu.ted.webshop.entity.Product;
 
-public class ProductCRUDGenerator {
+public class ProductCRUDQueryGenerator {
 
     static String getFieldValue(String fieldValue) {
         if (fieldValue == null){
