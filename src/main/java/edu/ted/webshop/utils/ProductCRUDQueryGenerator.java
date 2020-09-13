@@ -16,24 +16,18 @@ public class ProductCRUDQueryGenerator {
     }
 
     public static String getSelectAllQuery() {
-        return "SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM webshop.ws_products";
+        return "SELECT product_id, product_name, product_description, product_picture_url, product_price, product_version_id FROM webshop.ws_products";
     }
 
     public static String getFindAllQuery(String keyWord) {
-        return "SELECT " +
-                "product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id " +
-                "FROM " +
-                "webshop.ws_products " +
-                "WHERE lower(concat(product_name, product_description)) " +
+        return getSelectAllQuery() +
+                "\nWHERE lower(concat(product_name, product_description)) " +
                 "like lower(concat('%','" + keyWord + "','%'))";
     }
 
-    public static String getGetOneQuery(int id) {
-        return "SELECT " +
-                "product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id " +
-                "FROM " +
-                "webshop.ws_products " +
-                "WHERE " +
+    public static String getOneQuery(int id) {
+        return getSelectAllQuery() +
+                "\nWHERE " +
                 "product_id = " +
                 id;
     }

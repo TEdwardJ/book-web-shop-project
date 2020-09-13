@@ -10,14 +10,14 @@ class ProductCRUDQueryGeneratorTest {
     public void getFindAllQueryTest() {
         String keyWord = "iPhone";
         String preparedQuery = ProductCRUDQueryGenerator.getFindAllQuery(keyWord);
-        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM"));
+        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, product_version_id FROM"));
         assertTrue(preparedQuery.contains("'"+keyWord+"'"));
     }
 
     @Test
     public void getSelectAllQueryTest() {
         String preparedQuery = ProductCRUDQueryGenerator.getSelectAllQuery();
-        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, creation_date, product_version_id FROM"));
+        assertTrue(preparedQuery.contains("SELECT product_id, product_name, product_description, product_picture_url, product_price, product_version_id FROM"));
     }
 
     @Test

@@ -21,7 +21,7 @@ public class ProductRowMapper {
                     result.getBigDecimal(5)
             );
 
-            product.setVersionId(Optional.ofNullable(result.getString(7)).orElse(""));
+            product.setVersionId(Optional.ofNullable(result.getString(6)).orElse(""));
             return product;
         } catch (SQLException throwables) {
             LOGGER.error("Error occured: {}", throwables);

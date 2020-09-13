@@ -65,7 +65,7 @@ public class JdbcProductDao {
     }
 
     public Product getOneById(int id) {
-        String query = ProductCRUDQueryGenerator.getGetOneQuery(id);
+        String query = ProductCRUDQueryGenerator.getOneQuery(id);
         logger.debug("Prepared Query: {}", query);
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
