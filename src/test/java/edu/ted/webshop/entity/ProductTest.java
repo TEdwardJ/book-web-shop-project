@@ -11,7 +11,7 @@ class ProductTest {
 
     @Test
     void givenProductFromDefaultConstructorAndSetProperties_whenGettersReturnTheSameValues_thenCorrect() {
-        final int productId = 222;
+        int productId = 222;
         String productName = "Name";
         String productDescription = "Description";
         String productPictureUrl = "http://127.0.0.1/picture.jpg";
@@ -64,12 +64,12 @@ class ProductTest {
 
     @Test
     void givenProductWithId_whenGettersReturnTheSameValues_thenCorrect() {
-        final int productId = 222;
-        final String productName = "Name";
-        final String productDescription = "Description";
-        final String productPictureUrl = "http://127.0.0.1/picture.jpg";
-        final String productPrice = "5566.5";
-        final String productVersionId = "5566-ddcc-bbnn";
+        int productId = 222;
+        String productName = "Name";
+        String productDescription = "Description";
+        String productPictureUrl = "http://127.0.0.1/picture.jpg";
+        String productPrice = "5566.5";
+        String productVersionId = "5566-ddcc-bbnn";
         Product product = new Product(productId, productName, productDescription, productPictureUrl, new BigDecimal(productPrice));
         product.setVersionId(productVersionId);
         assertEquals(productId, product.getId());

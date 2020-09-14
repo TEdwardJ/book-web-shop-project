@@ -14,7 +14,7 @@ public class PropertyReader {
     public static Properties readPropertyFile(String propertiesFile) {
         logger.info("Property File To Read {}", propertiesFile);
         Properties properties = new Properties();
-        final URL resource = PropertyReader.class.getClassLoader().getResource(propertiesFile);
+        URL resource = PropertyReader.class.getClassLoader().getResource(propertiesFile);
         if (resource == null) {
             logger.warn("Resource {} not found", propertiesFile);
             return properties;

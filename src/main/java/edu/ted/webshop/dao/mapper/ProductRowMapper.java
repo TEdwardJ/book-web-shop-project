@@ -14,7 +14,7 @@ public class ProductRowMapper {
 
     public static Product map(ResultSet result) {
         try {
-            final Product product = new Product(result.getInt(1),
+            Product product = new Product(result.getInt(1),
                     result.getString(2),
                     result.getString(3),
                     result.getString(4),

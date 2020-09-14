@@ -59,7 +59,7 @@ public class Starter {
         mainContextHandler.setResourceBase("target/classes/static");
 
 
-        final FreeMarkerTemplateEngine templateEngine = new FreeMarkerTemplateEngine("/product/");
+        FreeMarkerTemplateEngine templateEngine = new FreeMarkerTemplateEngine("/product/");
         templateEngine.init();
 
         TemplateProcessor templateProcessor = new TemplateProcessor("product/");

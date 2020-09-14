@@ -26,7 +26,7 @@ class FreeMarkerTemplateEngineTest {
 
     @Test
     void getBaseTemplatePath() {
-        final String baseTemplatePath = TEMPLATE_ENGINE.getBaseTemplatePath();
+        String baseTemplatePath = TEMPLATE_ENGINE.getBaseTemplatePath();
         assertEquals(BASE_TEMPLATE_PATH, baseTemplatePath);
     }
 

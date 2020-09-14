@@ -10,8 +10,8 @@ public class ProductConverter {
         if (product == null) {
             return null;
         }
-        final BigDecimal productPrice = new BigDecimal(product.getPrice());
-        final Product newProduct = new Product(Integer.parseInt(product.getId()), product.getName(), product.getDescription(), product.getPictureUrl(), productPrice);
+        BigDecimal productPrice = new BigDecimal(product.getPrice());
+        Product newProduct = new Product(Integer.parseInt(product.getId()), product.getName(), product.getDescription(), product.getPictureUrl(), productPrice);
 
         newProduct.setVersionId(Optional.ofNullable(product.getVersionId()).orElse(""));
         return newProduct;

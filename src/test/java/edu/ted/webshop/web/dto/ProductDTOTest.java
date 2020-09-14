@@ -8,12 +8,12 @@ class ProductDTOTest {
 
     @Test
     void givenProductDTOFromConstructorWithoutVersion_whenGettersReturnGivenValues_thenCorrect() {
-        final String productId = "222";
-        final String productName = "Name";
-        final String productDescription = "Description";
-        final String productPictureUrl = "http://127.0.0.1/picture.jpg";
-        final String productPrice = "5566";
-        final String productVersionId = "5566-ddcc-bbnn";
+        String productId = "222";
+        String productName = "Name";
+        String productDescription = "Description";
+        String productPictureUrl = "http://127.0.0.1/picture.jpg";
+        String productPrice = "5566";
+        String productVersionId = "5566-ddcc-bbnn";
 
         ProductDTO product = new ProductDTO(productId, productName, productDescription, productPictureUrl, productPrice);
         product.setVersionId(productVersionId);
@@ -28,12 +28,12 @@ class ProductDTOTest {
 
     @Test
     void givenProductDTOFromConstructorWithNoParameters_whenGettersReturnEmptyValues_thenCorrect() {
-        final String productId = "0";
-        final String productName = "";
-        final String productDescription = "";
-        final String productPictureUrl = "";
-        final String productPrice = "";
-        final String productVersionId = "";
+        String productId = "0";
+        String productName = "";
+        String productDescription = "";
+        String productPictureUrl = "";
+        String productPrice = "";
+        String productVersionId = "";
 
         ProductDTO product = new ProductDTO();
 
@@ -47,12 +47,12 @@ class ProductDTOTest {
 
     @Test
     void givenProductDTOFromConstructorWithVersion_whenGettersReturnGivenValues_thenCorrect() {
-        final String productId = "222";
-        final String productName = "Name";
-        final String productDescription = "Description";
-        final String productPictureUrl = "http://127.0.0.1/picture.jpg";
-        final String productPrice = "5566";
-        final String productVersionId = "5566-ddcc-bbnn";
+        String productId = "222";
+        String productName = "Name";
+        String productDescription = "Description";
+        String productPictureUrl = "http://127.0.0.1/picture.jpg";
+        String productPrice = "5566";
+        String productVersionId = "5566-ddcc-bbnn";
 
         ProductDTO product = new ProductDTO(productId, productName, productDescription, productPictureUrl, productPrice, productVersionId);
 
